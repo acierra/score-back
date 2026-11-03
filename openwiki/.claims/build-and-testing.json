@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:2da2433303759b5fd26d4bce8de6dedefcd4ee7c7b64a07205a74bfe87f6af39",
+  "claims": [
+    {
+      "id": "claim_06f25b1b3dd84d8197ee75eb38be3691",
+      "statement": "The Gitea Wiki Sync workflow publishes OpenWiki pages on manual dispatch or on master pushes that touch the wiki content, sync script, or workflow; it authenticates with WIKI_TOKEN when provided and otherwise falls back to the Gitea job token.",
+      "evidence": [
+        {
+          "resource": "repo://.gitea/workflows/wiki-sync.yaml#L19-L32",
+          "version": "repo-lines-v1:sha256:3c3d3510471ed8a514432abedb907db73ddb751bb1527433915ff0cd2d68e8dc:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyNGNlODlmYmEyYWY5MzRiYTFmNWFmZTFkZjIxNmU1ZDcyZGNhOWQ2Y2Q2NDg2Nzk1YzMxYmViNzBkZGI1NzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjZjRkNzc2MGJmZmJkOTYwYmI3NWM4NmVmODVmYzBhOWM2N2ZmMTM5MGRhMzU2NzZhZTE0NWM2YTRlMTg3ODciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM2ZjkyNTFkOThhODgxMWQxYjNmYjJjYWY3ZWI4ZmY4MDE2YThhNDdjNjFjMmRkYmVhYzNiNDNlODA4MWNiM2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://.gitea/workflows/wiki-sync.yaml#L3-L11",
+          "version": "repo-lines-v1:sha256:8a1089a1cbb022f3c0c31e8b3f025cbd91fd8c49531325f9263446a9c21dc3df:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTk2ZGM0ODE0OWY1YTgzZDFlZDZkYmIzOWJiYzdlMmI5MDJhYTNkMzRkNmJkNWFlNGIyOTFiNjhkZjBjYTc5YSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDYxNTU4OGI3MDc4OWUzODU0ZTJhYmVjYjM3ZmE1NzViMzY5ZmRmZTJjMDlmMmU2NzIwYzhmYmZkZWFkNTFhOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDM2NThiMjMwNjQxNzNiMTE0YTVhNTYzN2Q4ZTJkYjlhZWM1N2Q0MzBlNmI1YTk0NmE4NWRkZTU4Y2VhZTliNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGU5NDZlN2IwODliNDUzYjRhNjM0Y2ExNTM4MGQxNWU5ODY1NTcxZmY5NmJhNDgxZjY3NmE5YzczNjIxNDcyNyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b1897b865dfa4c9e97f68a109b6899d4",
+      "statement": "The Gitea sync script maps the configured home page (default index.md) to Home.md, rewrites wiki and repository-relative links for Gitea, and excludes INSTRUCTIONS.md from publication.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/sync_gitea_wiki.sh#L13-L23",
+          "version": "repo-lines-v1:sha256:7fe6f0f80c404a18b8d9a019479ce6d4c184eb030f5bef979fe6dadf44d6e1c8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI1NWFhYWZlYjE1NzA1MmE1YjVjOWVkNGE0MzhhZWU2YzJhYWQxNmU3MWExYjE1MGMwZjZmMTkxZjA0OTIwNTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzZWY1MTQ2MGJhNjQwNjMxZjMwNmQ4Mjc2NDc3MWVmYjlkOWI4ZTkxZWIwN2VkNDg1MzYxN2FkYzgxMDhlNWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE3NWFmNDgxNmE4Zjk2Y2JlYzZlZDFlOGFhYzIwNmY0NTM5ZGY5NGU0NWJmZDk4ZGIzNGQ1OTlhNmRkZWZhNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5YmQ0MDdjYjYxYzA0MzljNTBlZDJjZDg0OTAyYTU4YzFkNTZmZGJmNGFhZDNiODNhOGFmOWE5MTVkMzAxMDgifQ"
+        },
+        {
+          "resource": "repo://scripts/sync_gitea_wiki.sh#L78-L93",
+          "version": "repo-lines-v1:sha256:39e71443cd13327f5651ee5cda013ecc7a38151b34da3f3e783b4a0bba9cafec:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRkNGNlMmE5MWQ0M2VkNzE4ZjU1OTQ0YmNmMDZlMzhiZTJhNDdhZDkyMzMwNGM2YWQ0ZjI2ZGJkMWVkMTdkZTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzNTdlZDFjYWVmNTFkZWVlZjBiYzBjNDEwYWNiM2I5Y2I1OWE0YzA5NmViNjJhZjAyNzUwNjJkNGUzYWU3ZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiNDIzYmIzMzQyYzc1NzVlNjQxMzA4MGYyZjAxZDc2ODhlNjE3MjVjNzRmZjNmNDQ2NmEwZGE2NDFmYzJlNjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzYmUyZmYxNzRmMDc4MjE5N2QyZThiMjA2OWNhMjU2MzE0NzlhMTQzMDcxOThmYTdmNjc2MWExZjFiODc3MDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a813d683372c4b6298a1abe95c04aa13",
+      "statement": "Gitea wiki synchronization supports a --dry-run preview, preserves wiki-only pages by default, and only prunes Markdown pages absent from openwiki/ when --prune is requested; the wiki repository must already have at least one page before the first clone can succeed.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/sync_gitea_wiki.sh#L25-L26",
+          "version": "repo-lines-v1:sha256:d834066aac2d466b590623b2c00f2a2f8673aaddfb49440c836aaa986b0f65df:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5MjM5OGExMWRiYzg4Zjk3YWI1ZjkwYjU1MmE4MzNiYTcxYTJhMjU4ZDk3MmQzNWRmMjAzZTgzZTY4NjUzMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjc0ZmU0MGRmYTUyMzJmMTFjMGIwN2ZkMTllYWQwOWZmZTA4ZDdhMWJhZjM4NmI3M2QyNTg3Mjg5YWIzODMxYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2NmNjIxZTQwNWYyNzI5OWE5ZWIwZDk0NmRhYmE2NDc3MGJjNjA2ZDA0ZTM1MDdiNjRjYTY0ZmEyYTBjZGMyZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTE5ODRmMjg1ODg3OGMzNDAyMmNjNTQ0NDQ2NWM0ZjU2NzNhMTRkZWE0YTU3YTU2ZGJlN2Y5MDYzYTY4NDBjOCJ9"
+        },
+        {
+          "resource": "repo://scripts/sync_gitea_wiki.sh#L5-L9",
+          "version": "repo-lines-v1:sha256:32ba712d791928d46ba85d5d7f9f8efc5711a13363aa4e7d35324fc36b995463:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2E4YjM1M2MyN2YzYTljNTc5NzJkM2UzODFmMzQ5MDIwYTgxMDI0N2QyZmMxMjUzMWE3ODdkZDFlYzU1MWFkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2ZkZDQyNjZiZmUwZjYwMzczM2VkZjU3NThhOTk5NDJiMmMxNzAxNTMzMTQ2MTE5MjkyYzUzYzUxYTIzMjE5MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjFhMDFhOGE3N2E3OTMxOTE4ZmEyMzk1NWU2ZWUzYjg5Y2JhMTNjYTFmMTRmOWI0MmNhODdlMTc2OGMxZDY2MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTc1YWY0ODE2YThmOTZjYmVjNmVkMWU4YWFjMjA2ZjQ1MzlkZjk0ZTQ1YmZkOThkYjM0ZDU5OWE2ZGRlZmE1ZiJ9"
+        },
+        {
+          "resource": "repo://scripts/sync_gitea_wiki.sh#L67-L75",
+          "version": "repo-lines-v1:sha256:aecedded8197a96a872ab45d609e04bc5f5db457db751e02e724eb888a659c85:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzgzNzlhZDllODM0MGU3ZmVmOTZlOWRkNmE1YTQzYzVjNmRhYzIxMGZjOTFmZTM4NzMyNGNjM2Y0YjRkNTllOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTk3ZjIzMTcyZDIwNWM0MWYyZWNiMmVmOTQyNTY5YWZkZTU2ZDI4MGQzMWM5ZTFiMzcwNTAzYTU5ZTBlYjc0YSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmEzMWYxNzA3NTM0YTRiOWY2ZTUxZTI5NDQ0ZDJlMjRhODUyMTI2M2UxMGM3N2VkNjk3YWQzNDc3MTg1M2U1MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzE5YjQ3MDY2YmE2YTcyYzE0NTZlZGMzZjI0ODJiZjE5ZjRiMWNjNjZlZjVmYjI2ZjIzOTZhYWVlNjczNWIzMyJ9"
+        },
+        {
+          "resource": "repo://scripts/sync_gitea_wiki.sh#L95-L105",
+          "version": "repo-lines-v1:sha256:c8e009ce632c6173eceb090285a5c520ff39e57c209bef6f0512b34925b807d9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2MGJkZDk1YzU0NDM0ZDM1ZDNmYjQ4MjEyMWE2YWUyNTc1NmE3ZDlkZWU3ODQxNjg0MWQ0OGY3NzE5MDg1YzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM3NjlkMjM3Y2Q0MjBiOWQzOGI5ODFhMGE0ZjY3NzAxOTBhNGE4M2RjYTFmZTU2YzRmNWJhMWUyY2JjMGVmNzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEzZGM5ODczNWNiNjNkOWE1OTg0ZGUxMWEwMTUzZmY1NWM2Mjk3YjNjMzI4ZWI5NGEyNjljMDA1MTI2ZmI4MzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI0YTRjYzdjNDgzODkzYjE0N2IyM2FiNjgxNDE4YWJkZDUyNjNhY2YxNDgxYjE4NDQ2MTQyOThiNjU1NGE4ZWIifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.0",
+    "at": "2026-10-12T11:40:45.370Z"
+  }
+}

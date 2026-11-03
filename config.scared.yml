@@ -1,0 +1,36 @@
+# CLI configuration for validating against a SCARED keyframe served by
+# scared_dataset_server (default port 8080; pick another if 8080 is busy).
+server:
+  ip: "127.0.0.1"
+  port: 8080
+
+cloud_point:
+  algorithm: cpu          # "gpu" falls back to CPU when CUDA is unavailable
+  num_disparities: 160    # fx ~1024 px, baseline ~4.35 mm -> up to ~160 px
+  min_depth_m: 0.02       # endoscopic working range: 20 mm .. 300 mm
+  max_depth_m: 0.30
+  ply_stride: 1           # option 5: 4 = 16x smaller mesh, block-averaged
+  wls_filter: false       # true = smoother mesh for viewers, ~10 % less accurate
+  # Disparity offset (px, may be fractional) added to every valid disparity
+  # before reprojection. Corrects the matcher's systematic bias towards the
+  # SCARED ground truth; 0 = off. Defaults shown.
+  # disparity_offset_px: 0.0
+  # Neighbourhood-consistency outlier filter, run after the depth-range
+  # filter: drops a point whose depth differs from the median of its
+  # window x window neighbourhood by more than
+  # max(abs_threshold_m, rel_threshold * median), or that has fewer than
+  # min_neighbours valid neighbours. Defaults shown (disabled).
+  # outlier_filter:
+  #   enabled: false
+  #   window: 5             # odd, >= 3
+  #   abs_threshold_m: 0.002
+  #   rel_threshold: 0.03
+  #   min_neighbours: 6     # 0 <= min_neighbours < window^2
+
+# Option 6 (compute-cloud + open viewer): where the offline viewer site goes
+# and how the browser is launched. Defaults shown.
+# viewer:
+#   output_dir: out/viewer-cli
+#   template_dir: ""        # "" = scripts/cloud_viewer/site of this checkout
+#   open_command: xdg-open  # single executable, run as `xdg-open <index.html>`
+#   stride: 4               # viewer frame sampling (1 = full resolution)

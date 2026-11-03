@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:e004a1221c725a38dba4124106bba1552f23950b8d2272459b0a41f9971bfc99",
+  "claims": [
+    {
+      "id": "claim_53a12d5962b247dc896cce75025a2ed4",
+      "statement": "RpcServer::process handles only single JSON-RPC request objects, requires jsonrpc 2.0 plus method and id fields, preserves the request id on responses, and returns standard codes for parse, invalid-request, unknown-method, and handler-exception failures.",
+      "evidence": [
+        {
+          "resource": "repo://src/rpc_server.cpp#L96-L132",
+          "version": "repo-lines-v1:sha256:d994dcdce91c2b391c6f200772fddb25a2d276f61040e7b1bdf42ac421251773:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU0NzFlNmRlNzE0OGVhYWI1NjczMDU2NDJlNWM1YzFlZjUyOGQ0YjExNzU1NGY5MTlmZDMyMmFmNjA4NWFhMzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxZWE3NmE3YTUxYjgzNTFlOTRiNzhkNmM3NDc5MjUwMzA1YzFmM2MyOTM1ODA1Njk4ODYyYzJiY2QxZmQ3YTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNkYTI5YjVmMzFlMmU5YTgxN2Y4NWRmY2EwNWU1Njk5MTA0Yjk5Y2ExY2NlYWE2MGZlMTVhZWFhODkxZTBjN2EifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_bbd263696fa04c71b466456f47103489",
+      "statement": "The stereo calibration RPC DTO represents each camera matrix as nine row-major doubles with five distortion coefficients, stereo rotation as nine values, translation as three values in metres, and image dimensions under image_size.",
+      "evidence": [
+        {
+          "resource": "repo://include/cloud_point_rpc/rpc_dto.hpp#L17-L35",
+          "version": "repo-lines-v1:sha256:91dd0554071da8ea03c0515a785b261f415115c963fc459a2f1b692d65c16af6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhZTAwZmYwMjkyNTAwMTE3MTEwNzlhMTA2Y2I5YWQ4OTFjMzhkYjdmM2IwNTg4ZDk1OWM3MzJiOTcyNWZlNTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhMWQxYTYzMzkwMjI5Yzc5ODM0N2U4M2EwNDA1NDQxYzk0MDAwMzUyODRhZDE2OGMxYmY2Y2RmMWQ3MGEzNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk4ZWIyNWE0YmM0ODA2YTIwOTg5YWE1YmFhZTNhY2Q4NzNmZmRhMDAwYjU4MjA5MzljNThmYmIzNDBhNTJkMWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNmMWQ4YTc1ZDgwZmUwMjliM2Y4ZGU1MGU2Mzk0NTAzN2YxNzcxNjk4YTU5YjIyYmQxZTZkNTI2MDA1M2U3MWUifQ"
+        },
+        {
+          "resource": "repo://include/cloud_point_rpc/rpc_dto.hpp#L99-L144",
+          "version": "repo-lines-v1:sha256:6cafc86c1c7d24b69b50b7d72a299a03c652416a47091ca788cf9ac655491b82:eyJzZWxlY3RlZExpbmVDb3VudCI6NDYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwZDdkNDc4YTM1MGIyYmIwMmExYzZhNmM2MDhhY2I5Y2E2YTgzYWJkNmMzOTM1YjJiYTkyNWNjYjliMjRjNTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk0ODU5NjIyYWEyODNmZTQ3N2ZjMjlhNDliOWIzZjU1YTZjZjNjMmE0MzNlYWVmMTQwYTUwMTY3Y2I3N2Y3ZTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ2MDdjYjkyNDRlOTc3OGJmNWZkZTYzZDg5ZWJmN2RjMWNjMmMxY2M4OGRlNzY3ZDc0YjkyMWZmNDUzZmI3ZDEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_775f8ed06dbb4b99a014ba7c89ae66f6",
+      "statement": "ImageRPC JSON serialization Base64-encodes the raw image bytes and includes width, height, and a BGR, RGBA, or DEPTH type label; deserialization accepts those labels and throws for unknown types.",
+      "evidence": [
+        {
+          "resource": "repo://include/cloud_point_rpc/rpc_dto.hpp#L52-L93",
+          "version": "repo-lines-v1:sha256:1c72a17ffd70b6038865f422faed45dd65beec4556a4f2b6c2090ce34fc30d47:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQwOTJhMzUxY2RiNTg2MGNkNGM4MDJiOGE5MmE3MmFkYzNjYzM4ODVkYjk3ZDkxM2NmYjYxZWJmZTFlY2YyZWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM4MTViM2E2MmM0NWM4NzhiYzAwMWZiMWQ5NTM5MDkwNjA2YzgwZjc3MDUyNDEyYWE1ODY1NzBlMmJhZjkwZWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVmMWY3OWIwMTk5YzA0OTEwN2MwN2NlYzNhMDNiOWYyNTUyMGZmOTk2Njg2MDY4OTNlMWZjZmViZDZkMTFlZGMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_69f7dfae12e649cb9499ea6c712dbb79",
+      "statement": "Non-object JSON requests and non-string method values currently raise nlohmann::json::type_error rather than producing an Invalid Request response, as documented by focused RPC edge-case tests.",
+      "evidence": [
+        {
+          "resource": "repo://src/rpc_server.cpp#L106-L117",
+          "version": "repo-lines-v1:sha256:f73f7cee2a407ade7777d24c761e9e7b759c57380b903b4ed11b3b03ea163101:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhZTczODIxOGQ4ZjY5MGViN2ZhYjVkMWVkZDc0MDZjZTYwYjdkZTc5NGJjM2E3NzI5ZjQ5YzA3YTExMGUwMDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmNTU5OTcyMzg0OTFkYWFkODMxZWEyNjNhNjRjNTdiZjgyY2NmYzNhMWI2N2U2NzE3OThlZDYwYmJmYjE0MWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE4MzcyZDU1YzFlNmE3MmJmZDBmNDgyMjE1Yzk3Nzc0ZTNlZWMwODViNDRiM2MwZDExNjVhODhhYjc2OTRmMGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg5NzhlMGNhOWIzOTYzMGE4MjdiZDc4YWUxZGI5MmQzOWZkZTU5NDUxN2NmMjFjNDY1ZmVhMmJiMzgwMGFjODkifQ"
+        },
+        {
+          "resource": "repo://tests/test_rpc_edge_cases.cpp#L38-L56",
+          "version": "repo-lines-v1:sha256:89b390bcd627496633e5e337e89f5493d66990d3a9047a04d93c09278fa3e211:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0MGI3OTIyMjc0NDAwNTVjOGFhYzIwYmMzYjEzYjcxYWI2MDNjYjliZGNlYTUwM2MzYTYyODVmZjI4NDhiNzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliNzhkYzEwY2MxMDQ2MTliOGNiNjVjNjEzMGQ0YjJlMzU4ODFiY2UwMjJhZTM5ZTRkYjc1MWNhOTkyNzcxNTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhjNGNiZjMzZTI0ODg3M2VjNmRkYTdlMDg3YmI3NWJmY2NhZTliMmY3MjkzNzNjMzhlNGE2NzljMTkzOTQ0NDcifQ"
+        },
+        {
+          "resource": "repo://tests/test_rpc_edge_cases.cpp#L89-L115",
+          "version": "repo-lines-v1:sha256:d3246bf593af49a1ab8030d074c080bdaeeeb913e1ddef7b3da425deb2852590:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0MTg5NWJiMmNiOGNkMTdmOGY1MTNkOTkzMzkxMTMwZDkyMWI1NjgxNTI4MmZiN2JmOTk4MTgyZTA3M2M1ODMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYwNTQ0M2U1NmRlNTczODhkMTljMzg0MzkyODhiYTU0MzMwNmI5NTM4NTJlYmZlMmZhNDg2NjI0Y2NlNmIxZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFjMGFhYTNiNTViOThhMGM2MGVhN2JiZWM1M2MwOTBhZmRjZTk2MTFjODUwNDM4Yjc3ODBmOGFiYTFjOGE4ZGQifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.0",
+    "at": "2026-10-12T11:40:45.370Z"
+  }
+}

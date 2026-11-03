@@ -1,0 +1,27 @@
+build/
+.cache/
+subprojects/asio-1.36.0/
+subprojects/glog/
+subprojects/googletest-*
+subprojects/nlohmann_json/
+subprojects/packagecache/
+subprojects/yaml-cpp-0.8.0
+subprojects/base64-0.5.2/
+subprojects/stdexec/
+subprojects/.*
+html/
+latex/
+large_tool_results/
+.venv/
+.worktrees/
+
+# IDE
+.idea/
+
+# Point-cloud exports
+*.ply
+build-docker/
+__pycache__/
+
+# Generated viewer sites / reports
+out/

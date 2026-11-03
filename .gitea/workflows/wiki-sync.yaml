@@ -1,0 +1,37 @@
+name: Wiki Sync
+run-name: ${{ gitea.actor }} syncs openwiki/ to the wiki
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "openwiki/**"
+      - "scripts/sync_gitea_wiki.sh"
+      - ".gitea/workflows/wiki-sync.yaml"
+
+jobs:
+  Sync-Wiki:
+    runs-on: ubuntu-latest
+    # Least privilege for the job token on Gitea versions that honour
+    # `permissions`; older versions ignore the block.
+    permissions:
+      contents: read
+      wiki: write
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Publish openwiki/ to the wiki
+        env:
+          # The job token is limited to this repository and expires with the
+          # job, so no stored secret is needed.
+          JOB_TOKEN: ${{ gitea.token }}
+          SERVER_URL: ${{ gitea.server_url }}
+          REPO_URL: ${{ gitea.server_url }}/${{ gitea.repository }}
+        run: |
+          git config --global user.name "wiki-sync"
+          git config --global user.email "wiki-sync@noreply.${SERVER_URL#*://}"
+          git config --global \
+            url."${SERVER_URL%%://*}://wiki-sync:${JOB_TOKEN}@${SERVER_URL#*://}/".insteadOf \
+            "${SERVER_URL}/"
+          scripts/sync_gitea_wiki.sh

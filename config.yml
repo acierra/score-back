@@ -1,0 +1,11 @@
+server:
+  ip: "127.0.0.1"
+  port: 9095
+
+# Optional stereo reconstruction settings for CLI options 4/5.
+# See config.scared.yml for values tuned to the SCARED endoscopic rig.
+# cloud_point:
+#   algorithm: gpu          # or cpu
+#   num_disparities: 128    # positive multiple of 16
+#   min_depth_m: 0.01
+#   max_depth_m: 10.0

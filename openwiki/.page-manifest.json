@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "pages": {
+    "/openwiki/architecture.md": {
+      "pageVersion": "sha256:e61ea0f7de618b40f3a3ba975c9173e866c86468d7bef63ab475a2839f5d6d52",
+      "completedBy": "opencode",
+      "completedRunId": "e6470544-54e8-4523-b609-96b54352320c",
+      "gitHead": "283bd28f4bbdb0304c7aaa8a7f486dc6f3007285",
+      "sourceFingerprint": "sha256:e1b2f75a1b1b9424301c05078907f0ec2d715101946b5a8ae38246d2f54a733b"
+    },
+    "/openwiki/build-and-testing.md": {
+      "pageVersion": "sha256:2da2433303759b5fd26d4bce8de6dedefcd4ee7c7b64a07205a74bfe87f6af39",
+      "completedBy": "opencode",
+      "completedRunId": "e6470544-54e8-4523-b609-96b54352320c",
+      "gitHead": "283bd28f4bbdb0304c7aaa8a7f486dc6f3007285",
+      "sourceFingerprint": "sha256:e1b2f75a1b1b9424301c05078907f0ec2d715101946b5a8ae38246d2f54a733b"
+    },
+    "/openwiki/c-api.md": {
+      "pageVersion": "sha256:052b0fed5fd026c1d42f112327a7336440b4cd65321b660279e9faa40c2cf7b2",
+      "completedBy": "opencode",
+      "completedRunId": "e6470544-54e8-4523-b609-96b54352320c",
+      "gitHead": "283bd28f4bbdb0304c7aaa8a7f486dc6f3007285",
+      "sourceFingerprint": "sha256:e1b2f75a1b1b9424301c05078907f0ec2d715101946b5a8ae38246d2f54a733b"
+    },
+    "/openwiki/quickstart.md": {
+      "pageVersion": "sha256:80b1125d22bcba7f640008d6d92e9521eb6e1a31af1dc7db05ba2049675fb8df",
+      "completedBy": "opencode",
+      "completedRunId": "e6470544-54e8-4523-b609-96b54352320c",
+      "gitHead": "283bd28f4bbdb0304c7aaa8a7f486dc6f3007285",
+      "sourceFingerprint": "sha256:e1b2f75a1b1b9424301c05078907f0ec2d715101946b5a8ae38246d2f54a733b"
+    },
+    "/openwiki/rpc-protocol.md": {
+      "pageVersion": "sha256:e004a1221c725a38dba4124106bba1552f23950b8d2272459b0a41f9971bfc99",
+      "completedBy": "opencode",
+      "completedRunId": "e6470544-54e8-4523-b609-96b54352320c",
+      "gitHead": "283bd28f4bbdb0304c7aaa8a7f486dc6f3007285",
+      "sourceFingerprint": "sha256:e1b2f75a1b1b9424301c05078907f0ec2d715101946b5a8ae38246d2f54a733b"
+    }
+  }
+}

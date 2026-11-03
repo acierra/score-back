@@ -1,0 +1,4 @@
+build*/
+datasets/
+*.ply
+*.tar.gz

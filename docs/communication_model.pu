@@ -1,0 +1,87 @@
+@startuml comm
+box ClientProcess #LightBlue
+Participant Caller
+Participant CloudPointClient
+Participant StereoRectifier
+Participant StereoMatcher
+Participant PointCloudBuilder
+Participant TCPClient
+end box
+box UnityProcess #LightGreen
+Participant TCPServer
+Participant CloudPointServer
+Participant MainThreadQueue
+Participant UnityWorld
+end box
+
+== Initialization ==
+
+UnityWorld -> CloudPointServer : Awake() — crpc_init()
+activate CloudPointServer
+CloudPointServer -> TCPServer : start (await connections)
+activate TCPServer
+
+Caller -> CloudPointClient : connect()
+activate CloudPointClient
+CloudPointClient -> TCPClient : establish TCP connection
+TCPClient -> TCPServer : TCP handshake
+TCPServer -> TCPServer : spawn per-client handler thread (loops)
+
+CloudPointClient -> TCPClient : get-stereo-calibration
+TCPClient -> TCPServer : send request
+TCPServer -> CloudPointServer : dispatch
+CloudPointServer -> MainThreadQueue : enqueue task
+MainThreadQueue -> UnityWorld : Update() dequeues
+activate UnityWorld
+UnityWorld -> UnityWorld : read camera params
+UnityWorld -> MainThreadQueue : tcs.SetResult(calibration JSON)
+deactivate UnityWorld
+MainThreadQueue -> CloudPointServer : task complete
+CloudPointServer -> TCPServer : send response
+TCPServer -> TCPClient : response
+TCPClient -> CloudPointClient : calibration received
+CloudPointClient -> StereoRectifier : init(calibration)\ncv::stereoRectify + remap maps
+deactivate CloudPointClient
+
+== Per compute_cloud() call ==
+
+Caller -> CloudPointClient : compute_cloud()
+activate CloudPointClient
+CloudPointClient -> TCPClient : get-image-pair
+TCPClient -> TCPServer : send request
+TCPServer -> CloudPointServer : dispatch
+CloudPointServer -> MainThreadQueue : enqueue task
+MainThreadQueue -> UnityWorld : Update() dequeues
+activate UnityWorld
+UnityWorld -> UnityWorld : Render() both cameras\nReadPixels + vertical flip\nBase64 encode
+UnityWorld -> MainThreadQueue : tcs.SetResult(image pair JSON)
+deactivate UnityWorld
+MainThreadQueue -> CloudPointServer : task complete
+CloudPointServer -> TCPServer : send response
+TCPServer -> TCPClient : response (base64 left + right)
+TCPClient -> CloudPointClient : image pair received
+
+CloudPointClient -> StereoRectifier : rectify(left, right)
+StereoRectifier -> StereoRectifier : cv::remap both images
+StereoRectifier -> CloudPointClient : rectified pair
+
+CloudPointClient -> StereoMatcher : compute(rectified left, right)
+StereoMatcher -> StereoMatcher : cv::StereoSGBM / cuda::StereoSGM\n(disparity * 16, CV_16S)\noptional median / WLS post-filter
+StereoMatcher -> CloudPointClient : disparity map
+
+CloudPointClient -> PointCloudBuilder : build(disparity[, reason map])
+PointCloudBuilder -> PointCloudBuilder : 1. disparity offset (opt-in,\n   disparity_offset_px, default 0)\n2. cv::reprojectImageTo3D with Q\n3. depth-range filter\n   [min_depth_m, max_depth_m]\n4. outlier filter (opt-in,\n   outlier_filter.enabled = false)
+PointCloudBuilder -> CloudPointClient : PointCloud (NaN = invalid)\n+ per-pixel Reason
+
+CloudPointClient -> Caller : std::expected<PointCloud, Error>
+deactivate CloudPointClient
+
+== Teardown ==
+
+Caller -> CloudPointClient : destruct
+deactivate CloudPointClient
+UnityWorld -> CloudPointServer : OnDestroy() — crpc_deinit()
+deactivate CloudPointServer
+deactivate TCPServer
+
+@enduml

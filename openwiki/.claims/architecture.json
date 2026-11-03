@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:e61ea0f7de618b40f3a3ba975c9173e866c86468d7bef63ab475a2839f5d6d52",
+  "claims": [
+    {
+      "id": "claim_7cebf98eceec4ca698c8d397a65d3c8d",
+      "statement": "TcpServer runs an accept loop and dispatches each accepted connection to its own jthread; each client handler repeatedly reads a framed request, invokes the request processor, and writes a framed response until the peer closes or an error occurs.",
+      "evidence": [
+        {
+          "resource": "repo://include/cloud_point_rpc/tcp_server.hpp#L133-L150",
+          "version": "repo-lines-v1:sha256:f9803438ec113788b583a610a7606ed8aeecd0eddfa0d69a928a4d041e285115:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxZjQ0YmY4MGQzMmJiOWI2YTJlZWZlOGVlNTE5YTVjNTA1YjI0OGZhMWQyYjkyMGEzZDE0NDhlYjhjZDU1NzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY3YTJlNGJjNzExMjA4NzNiM2RmMGE2MGJkNGZkOWQyODI0N2EzYWI1MTg1ZGNlMTk5NTRjNmM2NDcwOWViYWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM2ODJiNzU4ZGJjOGYxMTdjZDg2OTkzNjNjYzViNmE5ODIzNmFjZDBlOWM1ZDU0MDgxZWVkNmEzNGNlNmNlYWIifQ"
+        },
+        {
+          "resource": "repo://include/cloud_point_rpc/tcp_server.hpp#L44-L87",
+          "version": "repo-lines-v1:sha256:91d9180fb876953fef14e46e151d3c833e920f7e4a6f7e6b9628ebbbb082d869:eyJzZWxlY3RlZExpbmVDb3VudCI6NDQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlMzZjYjc5ZDEyMmVjMmQ0ZTE5ZDM4MjFlNjRjYzIzNGZkMjI1MDI0OGNjZmMwOTkyZjdlMTQ4NTAzZTgxMGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlNDYyYmQ4NWVhMzUyMjgyMmE5YWQzZWIyNDA5OWIwMzJhMWI2MjdiZWNmZDdjNTgzMWU5OTI3ZDRiYWM0MGUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE4ZGMxZjQ4YzQwZmUyN2Y4YzQ2OTA5NmJjMzA3MjI3NGEzMTY1YjQyMjg5ZTU5MmM2ZDZkZGVhMDkyMDM2NDUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc0ZjdkMTU3NzQ1ZDRkYjAxNjRiYWEwYmZhODc2YzA0OWUyNTMwMThmMzRiM2Q5MTViZGZiYTg0NjMzNDQ4MTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c2581159880744f38bf2666cceefb58f",
+      "statement": "RpcServer registers get-available-methods by default and maps malformed JSON, invalid requests, missing methods, and handler exceptions to JSON-RPC error responses with codes -32700, -32600, -32601, and -32000 respectively.",
+      "evidence": [
+        {
+          "resource": "repo://src/rpc_server.cpp#L47-L50",
+          "version": "repo-lines-v1:sha256:2a78737c7c700adfa66dac90d200f793f698054d62d02a19af059b2f4d0c21a6:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzMxNzlhOTJjZmJkNDE1NGZlNThmMzc4NGZlYTc5MWE2YjQ5YmY3ZDcyMDM5MzNlOTdiYTAxOGQ5MWJjZDhmZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGE0OTU1MzVkNmQ3OWQ0MGNlOTZkN2ZhYjllZmU1MDlhYjA2NzUxYjNhMTM4YzFkZWUyOGQ5MWM5Yzc2ZjZjYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjY2ZmI3NzhiNjU1OGFhNjcxOGJmYzFiOTRiZmNhMWVjMWJlNWU2ZDc4ZmU0NTJlZDgyMWE4N2RhZGQ2MjNmYyJ9"
+        },
+        {
+          "resource": "repo://src/rpc_server.cpp#L96-L132",
+          "version": "repo-lines-v1:sha256:d994dcdce91c2b391c6f200772fddb25a2d276f61040e7b1bdf42ac421251773:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU0NzFlNmRlNzE0OGVhYWI1NjczMDU2NDJlNWM1YzFlZjUyOGQ0YjExNzU1NGY5MTlmZDMyMmFmNjA4NWFhMzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIxZWE3NmE3YTUxYjgzNTFlOTRiNzhkNmM3NDc5MjUwMzA1YzFmM2MyOTM1ODA1Njk4ODYyYzJiY2QxZmQ3YTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNkYTI5YjVmMzFlMmU5YTgxN2Y4NWRmY2EwNWU1Njk5MTA0Yjk5Y2ExY2NlYWE2MGZlMTVhZWFhODkxZTBjN2EifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_440e662bcbf04fd59c750e30db22dec2",
+      "statement": "The C API owns process-global RPC server and TCP server state; its request processor serializes access to RpcServer with server_mtx, and deinitialization stops and joins the accept thread before resetting the server and clearing tracked rpc_string allocations.",
+      "evidence": [
+        {
+          "resource": "repo://src/server_api.cpp#L100-L110",
+          "version": "repo-lines-v1:sha256:669ebb4d61203c83956b68f659b7e0d0df726a55ba28e4ed5a7d20ca100217f6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4MDk4YjFhZmNjMzU3ODczYjRiOTQ5NDZkOGVkZDRhNTE1NTRjNzE5YmU5Zjk5MzNmYTU0YjBkNmFlNGQzNTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVkNmNjMGYwNGZjNjA3MGYyZDY2ODNlNGQ4ODk4MGRmYjM4MTNkMjk3NTc2ZjE2NmMxZTIwNzZjYTQzMTYwZjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE5ZTc2MzU1Y2YxMTk5NDgwYzNmOTk4MzZiMTQ4NmM4NDFkODkxZmFhZDkwNGM2MDhlMDkzMDIyZDM3NTdhZWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIyMWMxYTFkMTY1NDhiN2ZiZDA4NDdjNTVmMTM3OTQ2MGExYmQzYWJkYjBhMDU0MWU2MTUxNjYyODUyY2Y4ZWIifQ"
+        },
+        {
+          "resource": "repo://src/server_api.cpp#L11-L15",
+          "version": "repo-lines-v1:sha256:27eb4601a66a0ceb952c2ba9e6d9c0e7f931ede6a839d64e8de1b505545e6217:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTE5NDQ4ZDliNjA5NzFjNjJkZGM2ZTdjNTNiNDk4YjQyNjE2ZjAzNTRjMjRjZDg0YzRjNDdkNmQ3ZjViYWZlZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2VlMmVmMWI4OGNhYTRhMjU3N2JlNGI5YmNjYjY5ZGY4NDgwODQxYzQwZWZlYTM5ODZhYjA1ZWZiZTJmYjY2NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDE2YmViNjA5ZmMzYTRlMmQwNDQyOTVhNTU4MWY2MWU1MjdmOTM3ODA3NmE3ZDE5ZGEzZGQ3YzUxZjRiN2I5MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjc2ZmRkNjYyYjY5ODNjZmI1OTlkMTI2YzgyOWZhMjZkMzVlZjQyOTc2Mjc5ZDliZTQxNTFkNzNiNTY1OGI0NyJ9"
+        },
+        {
+          "resource": "repo://src/server_api.cpp#L67-L73",
+          "version": "repo-lines-v1:sha256:819a86ec33c5bc4e0e8d4bb03878bdb1e062d69aa087f24a89101507a24ba68a:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2IxN2Y5MmJlZTg0YWY1NjdiMTAwNDYwNTEyMDQ2ZGQzMjk4NWNmNjAyMDJmYzc4YmUyMTVlYWMwYjBmMzc1NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWUzNmRlODMzZWRmNjVkMTQxYzQ0Y2YxYmMxN2I4MzYyNmNiNzI5OTU0NDE0YjU5ZmVjMWM0Yzc1YzM4NWFmNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWI3MGMyZjk5ODQyN2JkY2ZmYTI4M2U2ODFlNjYyYjJkMWZkZWQxZmU4ZGYwNWVkM2Q2MTZkNDRhNTEzNGIxNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTQ2M2QzYmMyZTIzYjhlNmNjYmFkMmQzZDhmOGZjYmQxZmUxY2Q2NTcxOWQ0M2Q0NGI2ODMzZDJjN2RhZmUxMSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.0",
+    "at": "2026-10-12T11:40:45.370Z"
+  }
+}

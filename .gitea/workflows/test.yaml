@@ -1,0 +1,34 @@
+name: Verification
+run-name: ${{ gitea.actor }} runs verification of the project
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  Is-Buildable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure That Build system available
+        run: |
+          apt update
+          DEBIAN_FRONTEND=noninteractive apt install -y cmake make ninja-build gcc
+      - name: Prepare Environment
+        run: |
+          python3 -m venv $HOME/py/
+          source $HOME/py/bin/activate
+          echo PATH=$PATH >> $GITEA_ENV
+          pip install meson
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+      - name: Build project
+        run: |
+          cd ${{ gitea.workspace }}
+          meson setup build
+          meson compile -C build -j2
+      - name: Unit Test Results
+        run: |
+          meson test -C build
+      - run: echo "🍏 This job's status is ${{ job.status }}."

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Point cloud viewer</title>
+<link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="lede">
+    <div class="meta" id="meta">cloudPointRPC viewer</div>
+    <h1 id="title">Point cloud viewer</h1>
+    <p id="intro">Reconstructed point clouds in the rectified left-camera frame. Pick a frame to load its cloud into the viewer; frames with ground truth can be coloured by error.</p>
+  </header>
+
+  <div class="notice" id="notice" hidden></div>
+
+  <section id="frames-section">
+    <h2 id="frames-heading">Frames</h2>
+    <div class="tablebox">
+      <table>
+        <thead><tr id="thead-row"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <p class="small" id="grade-note" hidden>Grade: <span class="pill good">good</span> MAE &lt; 1 mm · <span class="pill warn">fair</span> 1–1.5 mm · <span class="pill bad">weak</span> &gt; 1.5 mm. Thresholds (&lt;1/2/5 mm) are fractions of ground-truth pixels, so missing reconstructions count against them.</p>
+  </section>
+
+  <section id="viewer-section">
+    <h2 id="vtitle">Cloud viewer</h2>
+    <div class="viewer">
+      <div class="stage" id="stage">
+        <div class="loading" id="loading">Waiting for frames…</div>
+        <div class="hud" id="hud"></div>
+        <div class="legend" id="legend" hidden></div>
+      </div>
+      <div class="side">
+        <div class="controls">
+          <div class="row" id="frame-row"><label class="cap" for="frame">Frame</label><select id="frame"></select></div>
+          <div class="row seg" role="group" aria-label="Colour points by">
+            <span class="cap">Colour points by</span>
+            <button type="button" data-mode="error" id="m-error">3D error</button>
+            <button type="button" data-mode="dz" id="m-dz">Depth bias</button>
+            <button type="button" data-mode="depth" id="m-depth">Depth</button>
+            <button type="button" data-mode="rgb" id="m-rgb">Image</button>
+          </div>
+          <label class="check" id="showgt-label"><input type="checkbox" id="showgt"> Overlay ground truth <span class="mono" style="color:var(--gt)">●</span></label>
+          <label class="check"><input type="checkbox" id="showrec" checked> Show reconstruction</label>
+          <div class="row"><label class="cap" for="psize">Point size</label><input type="range" id="psize" min="0.5" max="4" step="0.25" value="1.5"></div>
+          <div class="row"><label class="cap" for="clamp">Error colour limit (mm)</label><input type="range" id="clamp" min="0.5" max="10" step="0.5" value="4"><span class="mono num" id="clampv">4.0</span></div>
+          <div class="row"><button type="button" id="reset">Reset view</button><button type="button" id="side">Side view</button></div>
+        </div>
+        <dl class="kv" id="kv"></dl>
+      </div>
+    </div>
+    <div class="charts">
+      <div class="chart"><h3>Error distribution (sampled points)</h3><svg id="hist" viewBox="0 0 400 172" role="img" aria-label="Histogram of per-point 3D error"></svg><div class="note" id="histnote"></div></div>
+      <div class="chart"><h3>Median depth bias by depth</h3><svg id="bias" viewBox="0 0 400 172" role="img" aria-label="Median depth bias per depth bin"></svg><div class="note" id="biasnote">Reconstruction z minus ground-truth z, per 10 mm depth bin (bins with ≥ 150 samples). Positive means the cloud sits behind the true surface.</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <p id="foot-frame">Coordinates are in the rectified left-camera frame (x right, y down, z forward), in millimetres, quantised to 0.02 mm.</p>
+    <p>Metrics come from the full-resolution benchmark; the histogram and bias chart are recomputed from the sampled points shown in the viewer. Drag to orbit, right-drag to pan, scroll to zoom.</p>
+  </footer>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="viewer.js"></script>
+<script src="frames/manifest.js"></script>
+</body>
+</html>

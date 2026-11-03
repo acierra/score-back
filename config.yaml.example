@@ -1,0 +1,44 @@
+server:
+  ip: "127.0.0.1"
+  port: 8080
+
+test_data:
+  intrinsic_params: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+  extrinsic_params: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+  cloud_point:
+    - [0.1, 0.2, 0.3]
+    - [1.1, 1.2, 1.3]
+    - [5.5, 6.6, 7.7]
+
+# Optional: stereo reconstruction (CLI options 4-6). See config.scared.yml.
+# cloud_point:
+#   algorithm: gpu
+#   num_disparities: 128
+#   min_depth_m: 0.01
+#   max_depth_m: 10.0
+#   ply_stride: 1
+#   wls_filter: false
+#   # Disparity offset (px, may be fractional) added to every valid disparity
+#   # before reprojection; corrects a systematic matcher bias. 0 = off.
+#   disparity_offset_px: 0.0
+#   # Neighbourhood-consistency outlier filter, run after the depth-range
+#   # filter. A point is dropped when its depth differs from the median depth
+#   # of the valid points in a window x window neighbourhood by more than
+#   # max(abs_threshold_m, rel_threshold * median), or when the window holds
+#   # fewer than min_neighbours valid points. Defaults shown (disabled).
+#   outlier_filter:
+#     enabled: false
+#     window: 5             # odd, >= 3
+#     abs_threshold_m: 0.002
+#     rel_threshold: 0.03
+#     min_neighbours: 6     # 0 <= min_neighbours < window^2
+
+# Optional: offline point-cloud viewer (CLI option 6, "compute-cloud + open
+# viewer"). Every capture adds a timestamped frame to the site in output_dir.
+# viewer:
+#   output_dir: out/viewer-cli  # site directory (index.html + frames/)
+#   template_dir: ""            # "" = scripts/cloud_viewer/site of this checkout
+#   open_command: xdg-open      # program run as `<open_command> <index.html>`
+#                               # (no shell, single executable; "open" on macOS;
+#                               # "" = write the site without opening a browser)
+#   stride: 4                   # sample every 4th pixel (1 = full resolution)
