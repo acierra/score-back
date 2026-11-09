@@ -1,0 +1,6 @@
+cloud_point:
+  preprocessing:
+    chain:
+      - method: specular_mask
+        brightness_threshold: 245
+        dilation_radius: 1

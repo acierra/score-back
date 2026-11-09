@@ -39,11 +39,12 @@ class PointCloudBuilder {
     ///
     /// Stored as CV_8U in the optional reason map, one entry per pixel.
     enum class Reason : std::uint8_t {
-        valid            = 0, ///< point is present in the cloud
-        matcher_rejected = 1, ///< raw or offset-corrected disparity ≤ 0, or
-                              ///< the reprojection is non-finite / sentinel
-        depth_range      = 2, ///< z outside [min_depth_m, max_depth_m]
-        outlier_filter   = 3, ///< removed by the outlier filter
+        valid            = 0,   ///< point is present in the cloud
+        matcher_rejected = 1,   ///< raw or offset-corrected disparity ≤ 0, or
+                                ///< the reprojection is non-finite / sentinel
+        depth_range        = 2, ///< z outside [min_depth_m, max_depth_m]
+        outlier_filter     = 3, ///< removed by the outlier filter
+        preprocessing_mask = 4, ///< pipeline excluded a masked correspondence
     };
 
     /// @brief Human-readable, snake_case name of a reason code.

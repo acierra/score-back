@@ -363,7 +363,8 @@ int run_cli(std::istream &input, std::ostream &output, const std::string &ip,
                     builder.outlier_filter.min_neighbours =
                         stereo.outlier_filter.min_neighbours;
                     CloudPointClient cpc(ip, port, algo, builder,
-                                         stereo.num_disparities, matcher);
+                                         stereo.num_disparities, matcher,
+                                         stereo.preprocessing);
                     cpc.connect();
 
                     // Option 6 needs the rectified colour image as well.

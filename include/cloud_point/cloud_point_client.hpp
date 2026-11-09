@@ -3,6 +3,7 @@
 #include "cloud_point/point_cloud_builder.hpp"
 #include "cloud_point/stereo_matcher.hpp"
 #include "cloud_point/stereo_matcher_factory.hpp"
+#include "cloud_point/stereo_preprocessor.hpp"
 #include "cloud_point/stereo_rectifier.hpp"
 #include <expected>
 #include <memory>
@@ -36,11 +37,13 @@ class CloudPointClient {
     /// @param num_disparities  SGBM disparity levels (default 128; use 160 for
     ///                         small-baseline rigs such as SCARED).
     /// @param matcher_params   SGBM tuning / post-filters for the CPU matcher.
+    /// @param preprocessing    Ordered chain after rectification; default none.
     CloudPointClient(
         std::string ip, int port,
         StereoAlgorithmType algo        = StereoAlgorithmType::GPU,
         PointCloudBuilder::Options opts = {}, int num_disparities = 128,
-        CpuStereoMatcher::Params matcher_params = CpuStereoMatcher::Params{});
+        CpuStereoMatcher::Params matcher_params = CpuStereoMatcher::Params{},
+        PreprocessingConfig preprocessing       = {});
 
     ~CloudPointClient();
 
@@ -61,7 +64,7 @@ class CloudPointClient {
     };
 
     /// @brief Compute one point cloud: fetch image pair → gray → rectify →
-    ///        disparity → reproject.
+    ///        preprocessing → disparity → reproject.
     ///
     /// Equivalent to compute_frame() without the colour image (and without
     /// paying for its rectification).
@@ -87,6 +90,7 @@ class CloudPointClient {
     PointCloudBuilder::Options opts_;
     int num_disparities_;
     CpuStereoMatcher::Params matcher_params_;
+    StereoPreprocessorChain preprocessor_;
     std::unique_ptr<TCPConnector> connector_;
     std::unique_ptr<RpcClient> client_;
     std::unique_ptr<StereoRectifier> rectifier_;

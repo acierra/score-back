@@ -1,0 +1,197 @@
+{
+  "revision": "c1246e4f9f52e1ffd51fa45f8544288771785189",
+  "sources": [
+    {
+      "dataset": 1,
+      "source": "https://huggingface.co/datasets/maxhallan7/scared/resolve/c1246e4f9f52e1ffd51fa45f8544288771785189/dataset_1.zip?download=true",
+      "archive_size": 13432773758,
+      "transferred_bytes": 139945461,
+      "files": [
+        {
+          "path": "dataset_1/keyframe_1/Left_Image.png",
+          "archive_member": "dataset_1/keyframe_1/Left_Image.png",
+          "bytes": 2450973,
+          "sha256": "cc7de7a8b29f657a77008782ea02e861a6b407d0f3a75ec6ac79e8a3ce4bc9fd",
+          "zip_crc32": "ff89d232"
+        },
+        {
+          "path": "dataset_1/keyframe_1/Right_Image.png",
+          "archive_member": "dataset_1/keyframe_1/Right_Image.png",
+          "bytes": 2459855,
+          "sha256": "8c94c8b9332f5b5bbc64793ced99d3c5bfa76b9cafa37e6e63528db3dac62e2b",
+          "zip_crc32": "66131a8a"
+        },
+        {
+          "path": "dataset_1/keyframe_1/endoscope_calibration.yaml",
+          "archive_member": "dataset_1/keyframe_1/endoscope_calibration.yaml",
+          "bytes": 879,
+          "sha256": "597878f105e38ff2c2b7973d2c3a6af31293b904ca3b73bbe0a5f239466e6e9e",
+          "zip_crc32": "013d119c"
+        },
+        {
+          "path": "dataset_1/keyframe_1/point_cloud.obj",
+          "archive_member": "dataset_1/keyframe_1/point_cloud.obj",
+          "bytes": 63608516,
+          "sha256": "bfca9c91c604e679d4a58261da6c3415e3cd7a5acdd297a8ba35e39d2d0d09f0",
+          "zip_crc32": "b9432c40"
+        },
+        {
+          "path": "dataset_1/keyframe_2/Left_Image.png",
+          "archive_member": "dataset_1/keyframe_2/Left_Image.png",
+          "bytes": 2466934,
+          "sha256": "e07f036db339b65cf7fce2065f0ce93cfe19388ad1ffa06fdebeada2a30b1f11",
+          "zip_crc32": "c024a4d7"
+        },
+        {
+          "path": "dataset_1/keyframe_2/Right_Image.png",
+          "archive_member": "dataset_1/keyframe_2/Right_Image.png",
+          "bytes": 2495090,
+          "sha256": "28fbff04399c65c8ffd7517ad63ff6f3db2b96a0de69649f4ed587be06e6f687",
+          "zip_crc32": "2b66db89"
+        },
+        {
+          "path": "dataset_1/keyframe_2/endoscope_calibration.yaml",
+          "archive_member": "dataset_1/keyframe_2/endoscope_calibration.yaml",
+          "bytes": 879,
+          "sha256": "597878f105e38ff2c2b7973d2c3a6af31293b904ca3b73bbe0a5f239466e6e9e",
+          "zip_crc32": "013d119c"
+        },
+        {
+          "path": "dataset_1/keyframe_2/point_cloud.obj",
+          "archive_member": "dataset_1/keyframe_2/point_cloud.obj",
+          "bytes": 65914221,
+          "sha256": "f83879ac2a8265330781299b720ec05e96f791c6d56e92a2e0446d0e809b440b",
+          "zip_crc32": "7d6ce4bf"
+        }
+      ]
+    },
+    {
+      "dataset": 2,
+      "source": "https://huggingface.co/datasets/maxhallan7/scared/resolve/c1246e4f9f52e1ffd51fa45f8544288771785189/dataset_2.zip?download=true",
+      "archive_size": 23990521232,
+      "transferred_bytes": 132598865,
+      "files": [
+        {
+          "path": "dataset_2/keyframe_1/Left_Image.png",
+          "archive_member": "dataset_2/keyframe_1/Left_Image.png",
+          "bytes": 2158269,
+          "sha256": "7b3042e49abfae4521fc48e0980203c555d88526661d9178462141a34f8ae7b9",
+          "zip_crc32": "e5855948"
+        },
+        {
+          "path": "dataset_2/keyframe_1/Right_Image.png",
+          "archive_member": "dataset_2/keyframe_1/Right_Image.png",
+          "bytes": 2169922,
+          "sha256": "6db91c76ee7366b98612ffde2a968bbcb0d1d98eaf35432bd574a51528bc42ae",
+          "zip_crc32": "cd7abf0d"
+        },
+        {
+          "path": "dataset_2/keyframe_1/endoscope_calibration.yaml",
+          "archive_member": "dataset_2/keyframe_1/endoscope_calibration.yaml",
+          "bytes": 879,
+          "sha256": "597878f105e38ff2c2b7973d2c3a6af31293b904ca3b73bbe0a5f239466e6e9e",
+          "zip_crc32": "013d119c"
+        },
+        {
+          "path": "dataset_2/keyframe_1/point_cloud.obj",
+          "archive_member": "dataset_2/keyframe_1/point_cloud.obj",
+          "bytes": 56208049,
+          "sha256": "05e028fa3a300ebd3c10b52fb832c62e0d1a478fcc4540db1cf0304d405ffa79",
+          "zip_crc32": "2f3dc873"
+        },
+        {
+          "path": "dataset_2/keyframe_2/Left_Image.png",
+          "archive_member": "dataset_2/keyframe_2/Left_Image.png",
+          "bytes": 2261729,
+          "sha256": "d1cffdc2b32b192325b620ad2ce267e21e9f28f24611d4d6ac3dbd73c6b6df85",
+          "zip_crc32": "b398eb63"
+        },
+        {
+          "path": "dataset_2/keyframe_2/Right_Image.png",
+          "archive_member": "dataset_2/keyframe_2/Right_Image.png",
+          "bytes": 2257749,
+          "sha256": "acca98f60cdcbd943f57827e20c94e4aeeac2afb78d19d8dccf1a11d7161c304",
+          "zip_crc32": "087a5b62"
+        },
+        {
+          "path": "dataset_2/keyframe_2/endoscope_calibration.yaml",
+          "archive_member": "dataset_2/keyframe_2/endoscope_calibration.yaml",
+          "bytes": 879,
+          "sha256": "597878f105e38ff2c2b7973d2c3a6af31293b904ca3b73bbe0a5f239466e6e9e",
+          "zip_crc32": "013d119c"
+        },
+        {
+          "path": "dataset_2/keyframe_2/point_cloud.obj",
+          "archive_member": "dataset_2/keyframe_2/point_cloud.obj",
+          "bytes": 66994069,
+          "sha256": "8803e96671e9949c75d4035d9efd2b4831afd0ecd48e2aa91406422d60b83a7c",
+          "zip_crc32": "64e14bc2"
+        }
+      ]
+    },
+    {
+      "dataset": 3,
+      "source": "https://huggingface.co/datasets/maxhallan7/scared/resolve/c1246e4f9f52e1ffd51fa45f8544288771785189/dataset_3.zip?download=true",
+      "archive_size": 28960228414,
+      "transferred_bytes": 135209298,
+      "files": [
+        {
+          "path": "dataset_3/keyframe_1/Left_Image.png",
+          "archive_member": "dataset_3/keyframe_1/Left_Image.png",
+          "bytes": 2456838,
+          "sha256": "8b7e3204812d192ea6d0dfb3f28ac7e4e1073cb314b321f68c5f0c59fcee8666",
+          "zip_crc32": "7ab8250a"
+        },
+        {
+          "path": "dataset_3/keyframe_1/Right_Image.png",
+          "archive_member": "dataset_3/keyframe_1/Right_Image.png",
+          "bytes": 2483643,
+          "sha256": "35b7ac02ada0338b362151e1558b0af8cdadbd824dced227e9136a0671d17fcd",
+          "zip_crc32": "b00abbc8"
+        },
+        {
+          "path": "dataset_3/keyframe_1/endoscope_calibration.yaml",
+          "archive_member": "dataset_3/keyframe_1/endoscope_calibration.yaml",
+          "bytes": 879,
+          "sha256": "597878f105e38ff2c2b7973d2c3a6af31293b904ca3b73bbe0a5f239466e6e9e",
+          "zip_crc32": "013d119c"
+        },
+        {
+          "path": "dataset_3/keyframe_1/point_cloud.obj",
+          "archive_member": "dataset_3/keyframe_1/point_cloud.obj",
+          "bytes": 61490280,
+          "sha256": "0001f1dc9b2bad5d6faabb400636315c6ec5677e613b4e82ee08f658cd8cc2a0",
+          "zip_crc32": "6738d1da"
+        },
+        {
+          "path": "dataset_3/keyframe_2/Left_Image.png",
+          "archive_member": "dataset_3/keyframe_2/Left_Image.png",
+          "bytes": 2596472,
+          "sha256": "644c2359b1a2a2991f29156e2919e4cf81590d4e7e865b46a88ef9d2783a45fb",
+          "zip_crc32": "97ada0cb"
+        },
+        {
+          "path": "dataset_3/keyframe_2/Right_Image.png",
+          "archive_member": "dataset_3/keyframe_2/Right_Image.png",
+          "bytes": 2596664,
+          "sha256": "9dfaf9c0115e6230f87df7b433bbb3da85b45ba782e4062e2bed3a4b2e23f455",
+          "zip_crc32": "b0ead2e9"
+        },
+        {
+          "path": "dataset_3/keyframe_2/endoscope_calibration.yaml",
+          "archive_member": "dataset_3/keyframe_2/endoscope_calibration.yaml",
+          "bytes": 879,
+          "sha256": "597878f105e38ff2c2b7973d2c3a6af31293b904ca3b73bbe0a5f239466e6e9e",
+          "zip_crc32": "013d119c"
+        },
+        {
+          "path": "dataset_3/keyframe_2/point_cloud.obj",
+          "archive_member": "dataset_3/keyframe_2/point_cloud.obj",
+          "bytes": 63035906,
+          "sha256": "bc90d1dd2b48a4328cf029993260ba7323e44f5560a5c29955455db125d57e78",
+          "zip_crc32": "f8a1c5f8"
+        }
+      ]
+    }
+  ]
+}

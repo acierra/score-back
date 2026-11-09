@@ -89,6 +89,7 @@ struct ReconstructionDiagnostics {
         double matcher_rejected{0.0};
         double depth_range{0.0};
         double outlier_filter{0.0};
+        double preprocessing_mask{0.0}; ///< Excluded by stereo validity masks
     };
 
     std::size_t ground_truth_points{0}; ///< valid (finite) GT pixels
@@ -121,7 +122,7 @@ struct ReconstructionDiagnostics {
 /// valid when all three components are finite, and matched when the
 /// predicted point at the same pixel is finite too, so `coverage` equals the
 /// evaluator's.  Every valid GT pixel without a match is assigned exactly one
-/// `coverage_loss` cause (see CoverageLoss), so coverage plus the five
+/// `coverage_loss` cause (see CoverageLoss), so coverage plus the six
 /// fractions is 1.  The `image_border` band is the leftmost
 /// `min_disparity + num_disparities` columns, as cv::StereoSGBM leaves them,
 /// so widening the search range moves loss from `matcher_rejected` into

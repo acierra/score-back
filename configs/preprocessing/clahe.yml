@@ -1,0 +1,7 @@
+cloud_point:
+  preprocessing:
+    chain:
+      - method: clahe
+        statistics: independent
+        clip_limit: 2.0
+        tile_grid_size: 8

@@ -18,6 +18,7 @@ if opencv_dep.found()
     'test_image.cpp',
     'test_stereo_matcher.cpp',
     'test_stereo_rectifier.cpp',
+    'test_stereo_preprocessor.cpp',
     'test_point_cloud_builder.cpp',
     'test_point_cloud_evaluator.cpp',
     'test_reconstruction_diagnostics.cpp',
@@ -41,7 +42,9 @@ test_exe = executable('unit_tests',
   dependencies : test_deps,
   cpp_args : test_cpp_args)
 
-test('unit_tests', test_exe)
+# The suite includes RPC round-trips and an optional full-size SCARED frame.
+# Allow it to finish on a two-core development VM (default 30 s is too short).
+test('unit_tests', test_exe, timeout: 120)
 
 # Python unit tests for scripts/scared_overview.py and scripts/cloud_viewer/
 # (canned benchmark JSON, no binary needed; XLSX cases skip without openpyxl).

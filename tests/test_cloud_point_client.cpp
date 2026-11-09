@@ -136,6 +136,119 @@ class CloudPointClientTest : public ::testing::Test {
 // m
 // ---------------------------------------------------------------------------
 
+TEST_F(CloudPointClientTest, PreprocessingMatchesDirectPipelineAndKeepsColour) {
+    constexpr int port = 9229;
+    auto rpc           = std::make_unique<RpcServer>();
+    rpc->register_method("get-stereo-calibration", [](const json &) -> json {
+        json j;
+        to_json(j, make_stereo_calib());
+        return j;
+    });
+    rpc->register_method("get-image-pair", [](const json &) -> json {
+        json j;
+        to_json(j, make_image_pair());
+        return j;
+    });
+    start_server(port, std::move(rpc));
+
+    // Non-identity processing must actually reach the matcher, while the
+    // viewer continues to receive the original rectified colour image.
+    PreprocessingStep step;
+    step.method     = "clahe";
+    step.statistics = "independent";
+    const PreprocessingConfig config{true, {step}};
+    CloudPointClient client("127.0.0.1", port, StereoAlgorithmType::CPU, {},
+                            128, {}, config);
+    client.connect();
+    auto actual = client.compute_frame();
+    ASSERT_TRUE(actual.has_value()) << actual.error().message;
+
+    const auto pair = make_image_pair();
+    cv::Mat left(kHeight, kWidth, CV_8UC3,
+                 const_cast<uint8_t *>(pair.left.data.data()));
+    cv::Mat right(kHeight, kWidth, CV_8UC3,
+                  const_cast<uint8_t *>(pair.right.data.data()));
+    cv::Mat gray_l, gray_r;
+    cv::cvtColor(left, gray_l, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(right, gray_r, cv::COLOR_BGR2GRAY);
+    StereoRectifier rectifier(
+        StereoRectifier::Calibration::from_rpc(make_stereo_calib()));
+    const auto [l, r] = rectifier.rectify(gray_l, gray_r);
+    StereoPreprocessorChain chain(config);
+    const auto processed = chain.process(l, r);
+    CpuStereoMatcher matcher(0, 128);
+    PointCloudBuilder builder(rectifier.q());
+    const auto expected =
+        builder.build(matcher.compute(processed.left, processed.right));
+    ASSERT_EQ(actual->cloud.data.size(), expected.data.size());
+    for (std::size_t i = 0; i < expected.data.size(); ++i) {
+        if (std::isnan(expected.data[i]))
+            ASSERT_TRUE(std::isnan(actual->cloud.data[i]));
+        else
+            ASSERT_FLOAT_EQ(actual->cloud.data[i], expected.data[i]);
+    }
+    EXPECT_EQ(cv::norm(actual->rectified_left_bgr,
+                       rectifier.rectify(left, right).first, cv::NORM_INF),
+              0);
+}
+
+TEST_F(CloudPointClientTest, ExplicitNonePreservesExistingCloudExactly) {
+    constexpr int port = 9230;
+    auto rpc           = std::make_unique<RpcServer>();
+    rpc->register_method("get-stereo-calibration", [](const json &) -> json {
+        json j;
+        to_json(j, make_stereo_calib());
+        return j;
+    });
+    rpc->register_method("get-image-pair", [](const json &) -> json {
+        json j;
+        to_json(j, make_image_pair());
+        return j;
+    });
+    start_server(port, std::move(rpc));
+    CloudPointClient old_client("127.0.0.1", port, StereoAlgorithmType::CPU);
+    old_client.connect();
+    const auto old = old_client.compute_cloud();
+    ASSERT_TRUE(old.has_value());
+    PreprocessingConfig config{true, {PreprocessingStep{}}};
+    CloudPointClient none_client("127.0.0.1", port, StereoAlgorithmType::CPU,
+                                 {}, 128, {}, config);
+    none_client.connect();
+    const auto none = none_client.compute_cloud();
+    ASSERT_TRUE(none.has_value());
+    ASSERT_EQ(none->data.size(), old->data.size());
+    EXPECT_EQ(std::memcmp(none->data.data(), old->data.data(),
+                          old->data.size() * sizeof(float)),
+              0);
+}
+
+TEST_F(CloudPointClientTest, SpecularMaskExcludesUnreliablePoints) {
+    constexpr int port = 9231;
+    auto rpc           = std::make_unique<RpcServer>();
+    rpc->register_method("get-stereo-calibration", [](const json &) -> json {
+        json j;
+        to_json(j, make_stereo_calib());
+        return j;
+    });
+    rpc->register_method("get-image-pair", [](const json &) -> json {
+        json j;
+        to_json(j, make_image_pair());
+        return j;
+    });
+    start_server(port, std::move(rpc));
+    PreprocessingStep step;
+    step.method               = "specular_mask";
+    step.brightness_threshold = 1;
+    step.dilation_radius =
+        15; // intentionally masks this entire synthetic scene
+    CloudPointClient client("127.0.0.1", port, StereoAlgorithmType::CPU, {},
+                            128, {}, PreprocessingConfig{true, {step}});
+    client.connect();
+    const auto result = client.compute_cloud();
+    ASSERT_TRUE(result.has_value()) << result.error().message;
+    EXPECT_TRUE(result->valid_points().empty());
+}
+
 TEST_F(CloudPointClientTest, ComputeCloudReturnsCorrectDepth) {
     constexpr int kPort = 9201;
 

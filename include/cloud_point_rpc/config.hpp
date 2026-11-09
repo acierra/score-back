@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cloud_point_rpc/preprocessing_config.hpp"
+#include <algorithm>
 #include <cmath>
 #include <glog/logging.h>
 #include <stdexcept>
@@ -51,6 +53,8 @@ struct CloudPointConfig {
         int min_neighbours{6};         ///< 0 <= min_neighbours < window^2
     };
     OutlierFilter outlier_filter;
+    PreprocessingConfig
+        preprocessing; ///< Ordered photometric chain, none by default
 };
 
 /// @brief Offline point-cloud viewer settings consumed by CLI option 6
@@ -80,6 +84,74 @@ struct Config {
     CloudPointConfig cloud_point;
     ViewerConfig viewer;
 };
+
+/// @brief Read cloud_point.preprocessing without requiring OpenCV.
+/// Unknown keys and implicit independent statistics are rejected.
+inline PreprocessingConfig preprocessing_from_yaml(const YAML::Node &node) {
+    PreprocessingConfig result;
+    if (!node.IsDefined())
+        return result;
+    if (!node.IsMap())
+        throw std::invalid_argument("cloud_point.preprocessing must be a map");
+    for (const auto &entry : node) {
+        const auto key = entry.first.as<std::string>();
+        if (key != "enabled" && key != "chain")
+            throw std::invalid_argument("unknown preprocessing key: " + key);
+    }
+    result.enabled   = node["enabled"].as<bool>(true);
+    const auto chain = node["chain"];
+    if (chain.IsDefined()) {
+        if (!chain.IsSequence())
+            throw std::invalid_argument(
+                "preprocessing.chain must be a sequence");
+        for (const auto &item : chain) {
+            if (!item.IsMap() || !item["method"])
+                throw std::invalid_argument(
+                    "each preprocessing step must be a map with method");
+            PreprocessingStep s;
+            s.method = item["method"].as<std::string>();
+            std::vector<std::string> allowed{"method"};
+            if (s.method == "pair_normalize") {
+                allowed.insert(allowed.end(), {"statistics", "epsilon"});
+            } else if (s.method == "clahe") {
+                allowed.insert(allowed.end(),
+                               {"statistics", "clip_limit", "tile_grid_size"});
+            } else if (s.method == "local_normalize" ||
+                       s.method == "illumination_correction") {
+                allowed.insert(allowed.end(),
+                               {"statistics", "window_size", "epsilon"});
+            } else if (s.method == "specular_mask") {
+                allowed.insert(allowed.end(),
+                               {"brightness_threshold", "dilation_radius"});
+            } else if (s.method == "edge_preserving_denoise") {
+                allowed.insert(allowed.end(),
+                               {"diameter", "sigma_color", "sigma_space"});
+            }
+            for (const auto &entry : item) {
+                const auto key = entry.first.as<std::string>();
+                if (std::find(allowed.begin(), allowed.end(), key) ==
+                    allowed.end())
+                    throw std::invalid_argument("unknown preprocessing." +
+                                                s.method + " key: " + key);
+            }
+            s.statistics     = item["statistics"].as<std::string>(s.statistics);
+            s.clip_limit     = item["clip_limit"].as<double>(s.clip_limit);
+            s.tile_grid_size = item["tile_grid_size"].as<int>(s.tile_grid_size);
+            s.window_size    = item["window_size"].as<int>(s.window_size);
+            s.epsilon        = item["epsilon"].as<double>(s.epsilon);
+            s.diameter       = item["diameter"].as<int>(s.diameter);
+            s.sigma_color    = item["sigma_color"].as<double>(s.sigma_color);
+            s.sigma_space    = item["sigma_space"].as<double>(s.sigma_space);
+            s.brightness_threshold =
+                item["brightness_threshold"].as<int>(s.brightness_threshold);
+            s.dilation_radius =
+                item["dilation_radius"].as<int>(s.dilation_radius);
+            result.chain.push_back(std::move(s));
+        }
+    }
+    validate_preprocessing(result);
+    return result;
+}
 
 class ConfigLoader {
   public:
@@ -122,6 +194,8 @@ class ConfigLoader {
             if (config["cloud_point"]) {
                 const auto &cp = config["cloud_point"];
                 CloudPointConfig d;
+                c.cloud_point.preprocessing =
+                    preprocessing_from_yaml(cp["preprocessing"]);
                 c.cloud_point.algorithm =
                     cp["algorithm"].as<std::string>(d.algorithm);
                 c.cloud_point.num_disparities =

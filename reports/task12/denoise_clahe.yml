@@ -1,0 +1,11 @@
+cloud_point:
+  preprocessing:
+    chain:
+      - method: edge_preserving_denoise
+        diameter: 5
+        sigma_color: 20.0
+        sigma_space: 5.0
+      - method: clahe
+        statistics: independent
+        clip_limit: 2.0
+        tile_grid_size: 8

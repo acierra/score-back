@@ -184,6 +184,8 @@ const char *PointCloudBuilder::reason_name(Reason r) noexcept {
         return "depth_range";
     case Reason::outlier_filter:
         return "outlier_filter";
+    case Reason::preprocessing_mask:
+        return "preprocessing_mask";
     }
     return "unknown";
 }

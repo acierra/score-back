@@ -1,0 +1,7 @@
+cloud_point:
+  preprocessing:
+    chain:
+      - method: illumination_correction
+        statistics: independent
+        window_size: 51
+        epsilon: 1.0

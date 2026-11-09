@@ -2,6 +2,109 @@
 
 Communication JSON RPC protocol and implementation with Unity Scene.
 
+Task #12: [configurable stereo preprocessing and comparison](docs/preprocessing.md).
+
+## Задача 12. Переключаемая предобработка стереопары
+
+В проект добавлен настраиваемый этап обработки левого и правого изображений.
+Он расположен после ректификации и перед вычислением диспаритета. Методы задаются
+в порядке применения в `cloud_point.preprocessing.chain`; пустая цепочка является
+контрольным режимом `none`. Модуль подключён как к `CloudPointClient`, так и к
+программе сравнительного эксперимента SCARED.
+
+### Архитектура этапа
+
+```mermaid
+flowchart LR
+    Y["YAML: cloud_point.preprocessing"] --> C["StereoPreprocessorChain"]
+    L["Левое изображение"] --> G["Перевод в серый формат"]
+    R["Правое изображение"] --> G
+    G --> REC["StereoRectifier"]
+    REC --> PRE["Обработка ректифицированной пары"]
+    C --> PRE
+    PRE --> M["StereoMatcher: CPU StereoSGBM или GPU StereoSGM"]
+    M --> D["Карта диспаритета"]
+    D --> P["PointCloudBuilder: репроекция в 3D"]
+    P --> O["Облако точек"]
+    O --> E["Сравнение с эталоном SCARED"]
+```
+
+`IStereoPreprocessor` принимает пару изображений, а `StereoPreprocessorChain`
+последовательно передаёт результат каждого шага следующему. Это цепочка
+композиции обработчиков: выполняются все перечисленные операции. Реализация
+сохраняет размер и пиксельную сетку, необходимые для стереосопоставления.
+
+Пример конфигурации:
+
+```yaml
+cloud_point:
+  preprocessing:
+    enabled: true
+    chain:
+      - method: edge_preserving_denoise
+        diameter: 5
+        sigma_color: 20.0
+        sigma_space: 5.0
+      - method: clahe
+        statistics: independent
+        clip_limit: 2.0
+        tile_grid_size: 8
+```
+
+Поддерживаемые варианты: `none`, `pair_normalize`, `clahe`, `local_normalize`,
+`illumination_correction`, `edge_preserving_denoise` и `specular_mask`.
+`local_normalize` — упрощённый вариант локальной нормализации типа Wallis;
+`illumination_correction` не является полной реализацией Retinex. `specular_mask`
+исключает ненадёжные соответствия в ярких областях, но не восстанавливает
+закрытую бликами поверхность. Подробности параметров и ограничений приведены в
+[описании предобработки](docs/preprocessing.md).
+
+### Сравнительный эксперимент
+
+Проведено 48 запусков: шесть стереопар SCARED (по два кадра из `dataset_1`,
+`dataset_2`, `dataset_3`) на восемь конфигураций. Сравнивались `none`, шесть
+отдельных методов и цепочка `edge_preserving_denoise → clahe`. Во всех вариантах
+сохранялись одни и те же кадры, калибровка, ректификация и настройки CPU
+StereoSGBM; менялась только предобработка. Эталонные облака точек сравнивались
+в согласованных координатах без ICP.
+
+| Вариант | MAE3D, мм | RMSE3D, мм | Покрытие, % | ΔMAE к `none`, % | Время предобработки, мс |
+|---|---:|---:|---:|---:|---:|
+| `none` | 1,308 | 3,327 | 84,52 | 0,00 | 0,04 |
+| `pair_normalize` | 1,372 | 4,358 | 84,21 | +4,88 | 3,04 |
+| `clahe` | 1,609 | 6,204 | 79,72 | +23,03 | 11,14 |
+| `local_normalize` | 1,360 | 4,931 | 72,44 | +3,95 | 65,82 |
+| `illumination_correction` | 1,311 | 4,107 | 82,40 | +0,24 | 34,51 |
+| `edge_preserving_denoise` | **1,265** | **3,216** | **85,60** | **−3,28** | 36,17 |
+| `specular_mask` | 1,312 | 3,340 | 83,15 | +0,28 | 62,60 |
+| `edge_preserving_denoise → clahe` | 1,649 | 6,571 | 82,19 | +26,05 | 45,64 |
+
+На выбранной выборке наилучший результат показал `edge_preserving_denoise`:
+средняя MAE3D снизилась на 3,28%, RMSE3D — приблизительно на 3,34%, покрытие
+увеличилось примерно на 1,09 процентного пункта. Среднее время самого этапа
+предобработки составило 36,17 мс на проверенной виртуальной машине. Это время
+не включает загрузку, ректификацию, стереосопоставление и построение облака.
+Результат предварительный: шесть пар недостаточны для вывода о превосходстве
+метода на всех сценах SCARED или в реальном времени.
+
+MAE3D, RMSE3D и покрытие рассчитываются существующей в проекте функцией
+`PointCloudEvaluator`; в задаче 12 она использовалась для сопоставимого
+сравнения вариантов. Воспроизводимые исходные результаты и происхождение
+данных сохранены в [`reports/task12/`](reports/task12/), подробный разбор — в
+[отчёте по задаче 12](docs/task12-report.md), инструкции по запуску — в
+[документации модуля](docs/preprocessing.md). Формальный отчёт для приложения
+к задаче: [DOCX](reports/task12/Отчет_по_задаче_12_ГОСТ.docx).
+
+### Сборка и тестирование
+
+Для проверенной конфигурации Ubuntu 24.04, GCC 13.3, Meson 1.3.2 и OpenCV 4.6
+сборка завершилась успешно. По журналу последнего полного прогона прошли 187
+C++-тестов; в Python-наборе прошли 56 из 63 тестов, семь необязательных
+проверок XLSX были пропущены из-за отсутствия `openpyxl`. Новые тесты задачи 12
+и 48 сравнительных запусков завершились успешно. Эти сведения перенесены из
+журналов прежнего прогона и описаны в [формальном отчёте](reports/task12/Отчет_по_задаче_12_ГОСТ.docx);
+они не являются новым повторным запуском на машине читателя.
+
 ## Project Structure
 
 - `include/`: Header files for the RPC server, TCP server, and C-API.
@@ -17,6 +120,7 @@ Communication JSON RPC protocol and implementation with Unity Scene.
 
 Done:
 
+- [x] Configurable stereo preprocessing chain, baseline none, specular masks and SCARED comparison ([task 12 report](docs/task12-report.md))
 - [x] Server implementation with C-API for Unity
 - [x] OpenCV stereo client (StereoRectifier, CPU/GPU matchers, PointCloudBuilder, CloudPointClient facade)
 - [x] Tuned SGBM for the SCARED rig (P1/P2 penalties, uniqueness, speckle, LRC) and depth-range clipping
@@ -52,6 +156,7 @@ Unity acts as a data source: it serves stereo image pairs (`get-image-pair`) and
 | Stage | Class | Algorithm |
 |-------|-------|-----------|
 | Rectification | `StereoRectifier` | `cv::stereoRectify` + `initUndistortRectifyMap`/`remap`; also yields the Q reprojection matrix |
+| Preprocessing | `StereoPreprocessorChain` | Optional ordered photometric stages on the rectified grayscale pair; empty chain is baseline `none`. See [configuration and comparison](docs/preprocessing.md) |
 | Disparity (CPU) | `CpuStereoMatcher` | `cv::StereoSGBM` (semi-global block matching, `MODE_SGBM`, 16× fixed point) with optional median blur or `cv::ximgproc` WLS post-filter |
 | Disparity (GPU) | `GpuStereoMatcher` | `cv::cuda::StereoSGM` (`MODE_HH4`, 64/128/256 disparity levels); default, falls back to CPU without CUDA |
 | Disparity offset | `PointCloudBuilder` | Off by default (`cloud_point.disparity_offset_px: 0`). Adds a constant, possibly fractional, offset δ to every raw disparity > 0 before reprojection (`corrected = raw + δ`); a corrected value ≤ 0 makes the pixel invalid. Corrects a systematic matcher bias; see [Reconstruction diagnostics](#reconstruction-diagnostics) |

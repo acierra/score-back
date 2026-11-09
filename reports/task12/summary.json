@@ -1,0 +1,82 @@
+[
+  {
+    "method": "none",
+    "mae_3d_mm": 1.3078984664788007,
+    "rmse_3d_mm": 3.327222385967148,
+    "coverage_pct": 84.51551207340636,
+    "delta_mae_pct": 0.0,
+    "delta_coverage_pp": 0.0,
+    "preprocessing_ms": 0.043985833333333335,
+    "mae_improved_frames": 0
+  },
+  {
+    "method": "pair_normalize",
+    "mae_3d_mm": 1.3717758914866958,
+    "rmse_3d_mm": 4.358006464267905,
+    "coverage_pct": 84.20994515995919,
+    "delta_mae_pct": 4.883974302674243,
+    "delta_coverage_pp": -0.3055669134471639,
+    "preprocessing_ms": 3.0422849999999997,
+    "mae_improved_frames": 2
+  },
+  {
+    "method": "clahe",
+    "mae_3d_mm": 1.6090933084966188,
+    "rmse_3d_mm": 6.203882826216805,
+    "coverage_pct": 79.71893985464452,
+    "delta_mae_pct": 23.028916214628815,
+    "delta_coverage_pp": -4.796572218761829,
+    "preprocessing_ms": 11.140532333333333,
+    "mae_improved_frames": 0
+  },
+  {
+    "method": "local_normalize",
+    "mae_3d_mm": 1.3595787616300858,
+    "rmse_3d_mm": 4.930687624539331,
+    "coverage_pct": 72.43717821742628,
+    "delta_mae_pct": 3.9513996289346265,
+    "delta_coverage_pp": -12.078333855980073,
+    "preprocessing_ms": 65.82171716666667,
+    "mae_improved_frames": 0
+  },
+  {
+    "method": "illumination_correction",
+    "mae_3d_mm": 1.3110777482975178,
+    "rmse_3d_mm": 4.107252105937298,
+    "coverage_pct": 82.39800546556998,
+    "delta_mae_pct": 0.2430832285686968,
+    "delta_coverage_pp": -2.1175066078363725,
+    "preprocessing_ms": 34.50653283333333,
+    "mae_improved_frames": 3
+  },
+  {
+    "method": "edge_preserving_denoise",
+    "mae_3d_mm": 1.2650418954648903,
+    "rmse_3d_mm": 3.2161818780793068,
+    "coverage_pct": 85.60394295457358,
+    "delta_mae_pct": -3.276750612705537,
+    "delta_coverage_pp": 1.088430881167235,
+    "preprocessing_ms": 36.1680415,
+    "mae_improved_frames": 6
+  },
+  {
+    "method": "specular_mask",
+    "mae_3d_mm": 1.311573857786587,
+    "rmse_3d_mm": 3.340462311327367,
+    "coverage_pct": 83.14779058214548,
+    "delta_mae_pct": 0.2810150330462058,
+    "delta_coverage_pp": -1.367721491260876,
+    "preprocessing_ms": 62.59794116666667,
+    "mae_improved_frames": 1
+  },
+  {
+    "method": "denoise_clahe",
+    "mae_3d_mm": 1.648590873276563,
+    "rmse_3d_mm": 6.570974338428565,
+    "coverage_pct": 82.19329340592813,
+    "delta_mae_pct": 26.048842133364847,
+    "delta_coverage_pp": -2.3222186674782153,
+    "preprocessing_ms": 45.63548866666667,
+    "mae_improved_frames": 0
+  }
+]

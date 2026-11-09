@@ -1,0 +1,6 @@
+cloud_point:
+  preprocessing:
+    chain:
+      - method: pair_normalize
+        statistics: left_reference
+        epsilon: 1.0

@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
         stereo.max_depth_m = static_cast<float>(config.cloud_point.max_depth_m);
         stereo.ply_stride  = config.cloud_point.ply_stride;
         stereo.wls_filter  = config.cloud_point.wls_filter;
+        stereo.preprocessing          = config.cloud_point.preprocessing;
         stereo.disparity_offset_px    = config.cloud_point.disparity_offset_px;
         const auto &of                = config.cloud_point.outlier_filter;
         stereo.outlier_filter.enabled = of.enabled;

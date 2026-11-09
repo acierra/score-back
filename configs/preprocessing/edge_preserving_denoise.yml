@@ -1,0 +1,7 @@
+cloud_point:
+  preprocessing:
+    chain:
+      - method: edge_preserving_denoise
+        diameter: 5
+        sigma_color: 20.0
+        sigma_space: 5.0

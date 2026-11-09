@@ -22,9 +22,11 @@ CloudPointClient::CloudPointClient(std::string ip, int port,
                                    StereoAlgorithmType algo,
                                    PointCloudBuilder::Options opts,
                                    int num_disparities,
-                                   CpuStereoMatcher::Params matcher_params)
+                                   CpuStereoMatcher::Params matcher_params,
+                                   PreprocessingConfig preprocessing)
     : ip_(std::move(ip)), port_(port), algo_(algo), opts_(opts),
-      num_disparities_(num_disparities), matcher_params_(matcher_params) {}
+      num_disparities_(num_disparities), matcher_params_(matcher_params),
+      preprocessor_(preprocessing) {}
 
 CloudPointClient::~CloudPointClient() = default;
 
@@ -105,7 +107,11 @@ CloudPointClient::compute(bool with_colour) {
         // Rectify, compute disparity, reproject.
         auto [rect_left, rect_right] =
             rectifier_->rectify(left_gray, right_gray);
-        const auto disparity = matcher_->compute(rect_left, rect_right);
+        const auto processed = preprocessor_.process(rect_left, rect_right);
+        const auto matched_disparity =
+            matcher_->compute(processed.left, processed.right);
+        const auto disparity =
+            apply_preprocessing_masks(matched_disparity, processed);
         Frame frame;
         frame.cloud = builder_->build(disparity);
 

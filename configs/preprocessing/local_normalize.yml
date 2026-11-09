@@ -1,0 +1,7 @@
+cloud_point:
+  preprocessing:
+    chain:
+      - method: local_normalize
+        statistics: independent
+        window_size: 15
+        epsilon: 1.0

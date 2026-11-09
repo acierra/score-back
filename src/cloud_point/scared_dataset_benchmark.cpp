@@ -30,7 +30,9 @@
 #include "cloud_point/reconstruction_diagnostics.hpp"
 #include "cloud_point/scared_dataset_loader.hpp"
 #include "cloud_point/scared_ground_truth_loader.hpp"
+#include "cloud_point/stereo_preprocessor.hpp"
 #include "cloud_point/stereo_rectifier.hpp"
+#include "cloud_point_rpc/config.hpp"
 
 namespace {
 
@@ -83,6 +85,8 @@ struct BenchmarkOptions {
     ViewerArgs viewer;
     score::CpuStereoMatcher::Params matcher;
     score::PointCloudBuilder::Options builder; ///< offset + outlier filter
+    score::PreprocessingConfig preprocessing;
+    std::string preprocessing_export;
 };
 
 /// Strict integer parse: the whole value must be consumed.
@@ -149,7 +153,15 @@ BenchmarkOptions extract_options(int argc, char *argv[],
                 throw std::invalid_argument(key + " does not take a value");
         };
 
-        if (key == "--viewer-frame") {
+        if (key == "--preprocessing-config") {
+            opts.preprocessing = score::ConfigLoader::load(need_value())
+                                     .cloud_point.preprocessing;
+        } else if (key == "--preprocessing-export") {
+            opts.preprocessing_export = need_value();
+            if (opts.preprocessing_export.empty())
+                throw std::invalid_argument(
+                    "--preprocessing-export needs a path");
+        } else if (key == "--viewer-frame") {
             opts.viewer.frame_path = need_value();
             if (opts.viewer.frame_path.empty())
                 throw std::invalid_argument("--viewer-frame needs a path");
@@ -205,6 +217,7 @@ BenchmarkOptions extract_options(int argc, char *argv[],
 /// Q; the real one needs the calibration).
 /// @throws std::invalid_argument naming the offending setting.
 void validate_options(const BenchmarkOptions &opts, int num_disparities) {
+    score::validate_preprocessing(opts.preprocessing);
     if (num_disparities <= 0 || num_disparities % 16 != 0) {
         throw std::invalid_argument(
             "num_disparities must be a positive multiple of 16, got " +
@@ -230,6 +243,11 @@ void print_usage(const char *program) {
         << "  Accuracy metrics and diagnostics are reported when "
            "<keyframe_dir>/point_cloud.obj exists;\n"
         << "  depth statistics are always reported.\n"
+        << "Preprocessing flags (default: none):\n"
+        << "  --preprocessing-config=PATH  read only "
+           "cloud_point.preprocessing\n"
+        << "  --preprocessing-export=DIR   export before/after gray pairs and "
+           "matcher disparity\n"
         << "Viewer flags:\n"
         << "  --viewer-frame=PATH        write a web-viewer frame script "
            "(CloudViewer.addFrame; id = file stem)\n"
@@ -253,7 +271,34 @@ nlohmann::json settings_json(const BenchmarkOptions &opts, int min_disparity,
     const auto &m = opts.matcher;
     const auto &b = opts.builder;
     const auto &f = b.outlier_filter;
+    nlohmann::json preprocessing_chain = nlohmann::json::array();
+    for (const auto &s : opts.preprocessing.chain) {
+        nlohmann::json step = {{"method", s.method}};
+        if (!s.statistics.empty())
+            step["statistics"] = s.statistics;
+        if (s.method == "pair_normalize") {
+            step["epsilon"] = s.epsilon;
+        } else if (s.method == "clahe") {
+            step["clip_limit"]     = s.clip_limit;
+            step["tile_grid_size"] = s.tile_grid_size;
+        } else if (s.method == "local_normalize" ||
+                   s.method == "illumination_correction") {
+            step["window_size"] = s.window_size;
+            step["epsilon"]     = s.epsilon;
+        } else if (s.method == "edge_preserving_denoise") {
+            step["diameter"]    = s.diameter;
+            step["sigma_color"] = s.sigma_color;
+            step["sigma_space"] = s.sigma_space;
+        } else if (s.method == "specular_mask") {
+            step["brightness_threshold"] = s.brightness_threshold;
+            step["dilation_radius"]      = s.dilation_radius;
+        }
+        preprocessing_chain.push_back(std::move(step));
+    }
     return {
+        {"preprocessing",
+         {{"enabled", opts.preprocessing.enabled},
+          {"chain", std::move(preprocessing_chain)}}},
         {"min_disparity", min_disparity},
         {"num_disparities", num_disparities},
         {"block_size", m.block_size},
@@ -310,6 +355,7 @@ void append_diagnostics(nlohmann::json &output,
         {"matcher_rejected", d.coverage_loss.matcher_rejected},
         {"depth_range", d.coverage_loss.depth_range},
         {"outlier_filter", d.coverage_loss.outlier_filter},
+        {"preprocessing_mask", d.coverage_loss.preprocessing_mask},
     };
     output["unscored_fraction"] = d.unscored_fraction;
 }
@@ -436,6 +482,7 @@ int main(int argc, char *argv[]) {
         score::CpuStereoMatcher matcher(min_disparity, num_disparities,
                                         options.matcher);
         score::PointCloudBuilder builder(rectifier.q(), depth_range);
+        score::StereoPreprocessorChain preprocessor(options.preprocessing);
 
         const auto pair          = dataset.image_pair(0);
         const cv::Mat left_gray  = to_gray(pair.left);
@@ -444,11 +491,23 @@ int main(int argc, char *argv[]) {
             rectifier.rectify(left_gray, right_gray);
 
         const auto start = std::chrono::steady_clock::now();
-        const cv::Mat disparity =
-            matcher.compute(rectified_left, rectified_right);
+        const auto processed =
+            preprocessor.process(rectified_left, rectified_right);
+        const auto preprocessing_end = std::chrono::steady_clock::now();
+        const cv::Mat matched_disparity =
+            matcher.compute(processed.left, processed.right);
         const auto matching_end = std::chrono::steady_clock::now();
+        cv::Mat preprocessing_rejected;
+        const auto disparity = score::apply_preprocessing_masks(
+            matched_disparity, processed, &preprocessing_rejected);
+        const auto masking_end = std::chrono::steady_clock::now();
         cv::Mat reason;
         const score::PointCloud cloud = builder.build(disparity, &reason);
+        if (!preprocessing_rejected.empty())
+            reason.setTo(
+                cv::Scalar(static_cast<int>(
+                    score::PointCloudBuilder::Reason::preprocessing_mask)),
+                preprocessing_rejected);
         const auto reconstruction_end = std::chrono::steady_clock::now();
 
         const auto stats              = depth_stats(cloud);
@@ -456,12 +515,16 @@ int main(int argc, char *argv[]) {
             write_depth_png(cloud, depth_png, stats.z_p05_m, stats.z_p95_m);
         }
 
-        const auto matching_ms =
-            std::chrono::duration<double, std::milli>(matching_end - start)
+        const auto matching_ms = std::chrono::duration<double, std::milli>(
+                                     matching_end - preprocessing_end)
+                                     .count();
+        const auto preprocessing_ms =
+            std::chrono::duration<double, std::milli>(
+                (preprocessing_end - start) + (masking_end - matching_end))
                 .count();
         const auto reconstruction_ms =
             std::chrono::duration<double, std::milli>(reconstruction_end -
-                                                      matching_end)
+                                                      masking_end)
                 .count();
 
         nlohmann::json output = {
@@ -480,6 +543,11 @@ int main(int argc, char *argv[]) {
             {"z_p95_m", stats.z_p95_m},
             {"z_max_m", stats.z_max_m},
             {"matching_ms", matching_ms},
+            {"preprocessing_ms", preprocessing_ms},
+            {"preprocessing_masked_points",
+             preprocessing_rejected.empty()
+                 ? 0
+                 : cv::countNonZero(preprocessing_rejected)},
             {"reconstruction_ms", reconstruction_ms},
             {"has_ground_truth", ground_truth.has_value()},
             {"settings",
@@ -487,6 +555,40 @@ int main(int argc, char *argv[]) {
         };
         if (!depth_png.empty())
             output["depth_png"] = depth_png;
+
+        if (!options.preprocessing_export.empty()) {
+            const std::filesystem::path dir(options.preprocessing_export);
+            std::filesystem::create_directories(dir);
+            for (const auto &[name, image] :
+                 std::vector<std::pair<std::string, cv::Mat>>{
+                     {"left_rectified.png", rectified_left},
+                     {"right_rectified.png", rectified_right},
+                     {"left_preprocessed.png", processed.left},
+                     {"right_preprocessed.png", processed.right},
+                     {"left_valid_mask.png", processed.left_valid_mask},
+                     {"right_valid_mask.png", processed.right_valid_mask}}) {
+                if (image.empty())
+                    continue;
+                const auto path = (dir / name).string();
+                if (!cv::imwrite(path, image))
+                    throw std::runtime_error("failed to write " + path);
+            }
+            cv::FileStorage storage((dir / "matcher_disparity.yml.gz").string(),
+                                    cv::FileStorage::WRITE);
+            if (!storage.isOpened())
+                throw std::runtime_error("failed to write matcher disparity");
+            storage << "disparity" << matched_disparity;
+            if (!preprocessing_rejected.empty()) {
+                cv::FileStorage masked(
+                    (dir / "masked_disparity.yml.gz").string(),
+                    cv::FileStorage::WRITE);
+                if (!masked.isOpened())
+                    throw std::runtime_error(
+                        "failed to write masked disparity");
+                masked << "disparity" << disparity;
+            }
+            output["preprocessing_export"] = dir.string();
+        }
 
         cv::Mat rectified_ground_truth;
         if (ground_truth) {

@@ -119,10 +119,27 @@ make_inputs(const cv::Mat &reason, double offset = 0.0, float min_depth = 0.02f,
 double loss_sum(const score::ReconstructionDiagnostics &d) {
     const auto &l = d.coverage_loss;
     return d.coverage + l.out_of_search_range + l.image_border +
-           l.matcher_rejected + l.depth_range + l.outlier_filter;
+           l.matcher_rejected + l.depth_range + l.outlier_filter +
+           l.preprocessing_mask;
 }
 
 } // namespace
+
+TEST(ReconstructionDiagnosticsTest, AttributesPreprocessingMaskSeparately) {
+    const auto gt =
+        gt_from_disparity(disparity_from_depth(depth_ramp(0.05, 0.10)));
+    auto pred      = cloud_from_map(gt);
+    cv::Mat reason = cv::Mat::zeros(kHeight, kWidth, CV_8U);
+    set_invalid(pred, 100, 200); // inside search range and outside left border
+    reason.at<std::uint8_t>(100, 200) =
+        static_cast<std::uint8_t>(Reason::preprocessing_mask);
+    const auto diag =
+        score::diagnose_reconstruction(pred, gt, make_inputs(reason));
+    EXPECT_NEAR(diag.coverage_loss.preprocessing_mask, 1.0 / (kWidth * kHeight),
+                1e-12);
+    EXPECT_EQ(diag.coverage_loss.matcher_rejected, 0);
+    EXPECT_NEAR(loss_sum(diag), 1.0, 1e-9);
+}
 
 // ---------------------------------------------------------------------------
 // Q geometry

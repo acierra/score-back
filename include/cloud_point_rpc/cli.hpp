@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cloud_point_rpc/preprocessing_config.hpp"
 #include "export.h"
 #include <iostream>
 #include <string>
@@ -51,6 +52,7 @@ struct CliStereoOptions {
     double disparity_offset_px{0.0};
     OutlierFilter outlier_filter; ///< Disabled by default
     CliViewerOptions viewer;      ///< Option 6 viewer site settings
+    PreprocessingConfig preprocessing; ///< None by default
 };
 
 /**

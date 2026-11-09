@@ -127,7 +127,7 @@ diagnose_reconstruction(const PointCloud &predicted, const cv::Mat &ground_truth
     matched.reserve(pixel_count / 2);
 
     std::size_t lost_search = 0, lost_border = 0, lost_matcher = 0,
-                lost_depth = 0, lost_outlier = 0;
+                lost_depth = 0, lost_outlier = 0, lost_preprocessing = 0;
     std::size_t valid_predicted = 0, unscored = 0;
 
     for (int row = 0; row < ground_truth.rows; ++row) {
@@ -189,6 +189,9 @@ diagnose_reconstruction(const PointCloud &predicted, const cv::Mat &ground_truth
                 case Reason::outlier_filter:
                     ++lost_outlier;
                     break;
+                case Reason::preprocessing_mask:
+                    ++lost_preprocessing;
+                    break;
                 case Reason::valid:
                 default:
                     throw std::invalid_argument(
@@ -219,6 +222,8 @@ diagnose_reconstruction(const PointCloud &predicted, const cv::Mat &ground_truth
     out.coverage_loss.depth_range = static_cast<double>(lost_depth) / gt_count;
     out.coverage_loss.outlier_filter =
         static_cast<double>(lost_outlier) / gt_count;
+    out.coverage_loss.preprocessing_mask =
+        static_cast<double>(lost_preprocessing) / gt_count;
     out.unscored_fraction =
         valid_predicted == 0
             ? 0.0

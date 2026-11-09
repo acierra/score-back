@@ -17,6 +17,7 @@ cloud_point_sources = files(
     'gpu_stereo_matcher.cpp',
     'stereo_matcher_factory.cpp',
     'stereo_rectifier.cpp',
+    'stereo_preprocessor.cpp',
     'point_cloud_builder.cpp',
     'point_cloud_evaluator.cpp',
     'reconstruction_diagnostics.cpp',

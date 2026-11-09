@@ -27,6 +27,77 @@ TEST(ConfigLoaderTest, CloudPointSectionDefaultsWhenAbsent) {
     EXPECT_EQ(c.cloud_point.num_disparities, 128);
     EXPECT_DOUBLE_EQ(c.cloud_point.min_depth_m, 0.01);
     EXPECT_DOUBLE_EQ(c.cloud_point.max_depth_m, 10.0);
+    EXPECT_TRUE(c.cloud_point.preprocessing.enabled);
+    EXPECT_TRUE(c.cloud_point.preprocessing.chain.empty());
+}
+
+TEST(ConfigLoaderTest, PreprocessingChainKeepsOrderAndParameters) {
+    TempConfig cfg("cloud_point:\n  preprocessing:\n    enabled: true\n"
+                   "    chain:\n      - method: pair_normalize\n"
+                   "        statistics: left_reference\n        epsilon: 2.5\n"
+                   "      - method: clahe\n        statistics: independent\n"
+                   "        clip_limit: 3.0\n        tile_grid_size: 4\n");
+    const auto c  = score::ConfigLoader::load(cfg.path);
+    const auto &p = c.cloud_point.preprocessing;
+    ASSERT_EQ(p.chain.size(), 2u);
+    EXPECT_EQ(p.chain[0].method, "pair_normalize");
+    EXPECT_DOUBLE_EQ(p.chain[0].epsilon, 2.5);
+    EXPECT_EQ(p.chain[1].method, "clahe");
+    EXPECT_DOUBLE_EQ(p.chain[1].clip_limit, 3.0);
+    EXPECT_EQ(p.chain[1].tile_grid_size, 4);
+}
+
+TEST(ConfigLoaderTest,
+     PreprocessingRejectsTyposAndImplicitIndependentStatistics) {
+    for (const auto *body :
+         {"chain: [{method: typo}]", "chain: [clahe]", "chain: none",
+          "chain: [{method: clahe}]",
+          "chain: [{method: clahe, statistics: independent, clip_limit: .nan}]",
+          "chain: [{method: clahe, statistics: independent, tile_grid_size: "
+          "0}]",
+          "chain: [{method: none, clip_limt: 3}]",
+          "chain: [{method: local_normalize, statistics: independent, "
+          "window_size: 2}]",
+          "chain: [{method: edge_preserving_denoise, diameter: 0}]",
+          "chain: [{method: pair_normalize, statistics: left_reference, "
+          "epsilon: 0}]",
+          "enabled: false\n    chain: [{method: unknown}]", "enabld: false"}) {
+        SCOPED_TRACE(body);
+        TempConfig cfg(std::string("cloud_point:\n  preprocessing:\n    ") +
+                       body + "\n");
+        EXPECT_THROW(std::ignore = score::ConfigLoader::load(cfg.path),
+                     std::invalid_argument);
+    }
+}
+
+TEST(ConfigLoaderTest, PreprocessingAcceptsExplicitNoneAndDisabledChain) {
+    for (const auto *body : {"chain: []", "chain: [{method: none}]",
+                             "enabled: false\n    chain: [{method: none}]"}) {
+        TempConfig cfg(std::string("cloud_point:\n  preprocessing:\n    ") +
+                       body + "\n");
+        EXPECT_NO_THROW(std::ignore = score::ConfigLoader::load(cfg.path));
+    }
+}
+
+TEST(ConfigLoaderTest, SpecularMaskParametersAndLimits) {
+    TempConfig cfg(
+        "cloud_point:\n  preprocessing:\n    chain:\n"
+        "      - method: specular_mask\n        brightness_threshold: 240\n"
+        "        dilation_radius: 2\n");
+    const auto config = score::ConfigLoader::load(cfg.path);
+    ASSERT_EQ(config.cloud_point.preprocessing.chain.size(), 1u);
+    EXPECT_EQ(config.cloud_point.preprocessing.chain[0].brightness_threshold,
+              240);
+    EXPECT_EQ(config.cloud_point.preprocessing.chain[0].dilation_radius, 2);
+    for (const auto *params :
+         {"brightness_threshold: 256", "dilation_radius: -1"}) {
+        TempConfig bad(
+            std::string("cloud_point:\n  preprocessing:\n    chain:\n"
+                        "      - method: specular_mask\n        ") +
+            params + "\n");
+        EXPECT_THROW(std::ignore = score::ConfigLoader::load(bad.path),
+                     std::invalid_argument);
+    }
 }
 
 TEST(ConfigLoaderTest, CloudPointSectionIsParsed) {

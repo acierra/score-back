@@ -11,6 +11,8 @@ cloud_point:
   max_depth_m: 0.30
   ply_stride: 1           # option 5: 4 = 16x smaller mesh, block-averaged
   wls_filter: false       # true = smoother mesh for viewers, ~10 % less accurate
+  preprocessing:
+    chain: []             # baseline none; see docs/preprocessing.md
   # Disparity offset (px, may be fractional) added to every valid disparity
   # before reprojection. Corrects the matcher's systematic bias towards the
   # SCARED ground truth; 0 = off. Defaults shown.
