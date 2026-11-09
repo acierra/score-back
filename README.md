@@ -1,6 +1,5 @@
 # Cloud Point RPC
 
-Communication JSON RPC protocol and implementation with Unity Scene.
 
 Task #12: [configurable stereo preprocessing and comparison](docs/preprocessing.md).
 
